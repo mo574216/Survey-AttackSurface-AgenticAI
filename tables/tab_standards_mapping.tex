@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{Cross-Framework Harmonization: Mapping Agentic Attack Surfaces to OWASP Top 10 (2025), MITRE ATLAS, and NIST AI RMF.}
+\label{tab:standards_mapping}
+\footnotesize
+\begin{tabularx}{\columnwidth}{p{2.2cm} X X X X}
+\toprule
+\textbf{Agentic Attack Surface} & \textbf{OWASP LLM 2025~\cite{owasp2025top10}} & \textbf{MITRE ATLAS~\cite{mitre2026atlas}} & \textbf{NIST AI RMF (100-2e2025)~\cite{vassilev2025adversarial}} & \textbf{EU AI Act Compliance Focus} \\
+\midrule
+\textbf{Direct \& Indirect Injection} & LLM01: Prompt Injection & AML.T0051.000 / .001: Prompt Injection & Evasion: Indirect Context Poisoning & Art. 15: Cyber Resilience \& Robustness \\
+\addlinespace
+\textbf{RAG \& Knowledge Corruption} & LLM04: Poisoning; LLM08: Embedding Weakness & AML.T0070: Data Poisoning: Retrieval & Poisoning: Training \& Ingestion Stores & Art. 10: Data Governance \& Quality \\
+\addlinespace
+\textbf{Tool Misuse \& Parameter Injection} & LLM05: Output Handling; LLM06: Excessive Agency & AML.T0053: LLM Plugin Compromise & Integrity: System-Level Subversion & Art. 14: Human Oversight \& Control \\
+\addlinespace
+\textbf{API \& Cloud Credential Abuse} & LLM06: Excessive Agency; LLM02: Sensitive Info & AML.T0086: Lateral Movement & Unauthorized Privilege Traversal & Art. 15: Access Boundaries \& Isolation \\
+\addlinespace
+\textbf{Memory \& Backdoor Persistence} & LLM04: Poisoning; LLM07: System Prompt Leak & AML.T0080.000: Conversation Hijacking & Persistence: State Subversion & Art. 12: Record-Keeping \& Audit Logs \\
+\addlinespace
+\textbf{Multi-Agent Cascades \& Swarms} & LLM01: Prompt Injection; LLM06: Excessive Agency & AML.T0051.001: Indirect Prompt Injection & Distributed Agent Compromise & Art. 14: Systemic Risk Assessment \\
+\addlinespace
+\textbf{Denial of Cash (DoC) \& Loops} & LLM10: Unbounded Consumption & AML.T0034: Compute Hijacking & Availability: Resource Depletion & Art. 9: Risk Management Systems \\
+\bottomrule
+\end{tabularx}
+\end{table}

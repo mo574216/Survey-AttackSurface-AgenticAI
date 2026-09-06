@@ -1,0 +1,164 @@
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    >=Stealth,
+    stage/.style={draw=blue!80!black, fill=blue!6, rounded corners=3pt, align=center, inner sep=4pt, minimum width=3.2cm, line width=1.0pt},
+    adversary/.style={draw=red!80!black, fill=red!6, rounded corners=3pt, align=center, inner sep=4pt, minimum width=3.2cm, line width=0.9pt},
+    asset/.style={draw=purple!80!black, fill=purple!7, rounded corners=3pt, align=center, inner sep=4pt, minimum width=3.2cm, line width=1.0pt},
+    attack_edge/.style={->, thick, draw=red!80!black, shorten >= 2pt, shorten <= 2pt},
+    defense_cut/.style={draw=green!60!black, fill=green!12, line width=1.1pt, dashed, rounded corners=4pt, inner sep=5pt}
+]
+
+% =========================================================================
+% ROW 1: Ingress Adversary Footholds (Y = 4.4 cm)
+% =========================================================================
+\node[adversary] (adv_prompt) at (0, 4.4) {
+    \textbf{Malicious Prompt}\\
+    \scriptsize $\mathcal{A}_{\text{ext}}$ (Direct Injection)
+};
+
+\node[adversary] (adv_content) at (4.2, 4.4) {
+    \textbf{Untrusted Web / Doc}\\
+    \scriptsize $\mathcal{A}_{\text{cont}}$ (Indirect Injection)
+};
+
+\node[adversary] (adv_rag) at (8.4, 4.4) {
+    \textbf{Poisoned Corpus}\\
+    \scriptsize $\mathcal{A}_{\text{cont}}$ (RAG / Knowledge Base)
+};
+
+\node[adversary] (adv_peer) at (12.6, 4.4) {
+    \textbf{Byzantine Peer}\\
+    \scriptsize $\mathcal{A}_{\text{peer}}$ (Multi-Agent Comms)
+};
+
+% =========================================================================
+% ROW 2: Agent Cognitive & Retrieval Substrate (Y = 2.6 cm)
+% =========================================================================
+\node[stage] (llm_direct) at (0, 2.6) {
+    \textbf{Direct LLM Inference}\\
+    \scriptsize System Prompt \& Reasoning
+};
+
+\node[stage] (retriever) at (4.2, 2.6) {
+    \textbf{RAG Retriever}\\
+    \scriptsize Vector / Semantic Store
+};
+
+\node[stage] (memory_store) at (8.4, 2.6) {
+    \textbf{Episodic Memory}\\
+    \scriptsize Reflection \& History
+};
+
+\node[stage] (mas_bus) at (12.6, 2.6) {
+    \textbf{Multi-Agent Bus}\\
+    \scriptsize Message Dispatch Broker
+};
+
+% =========================================================================
+% ROW 3: Tool Execution & Environmental Effectors (Y = 0.8 cm)
+% =========================================================================
+\node[stage] (tool_broker) at (0, 0.8) {
+    \textbf{Tool Broker}\\
+    \scriptsize Parameter Parsing \& MCP
+};
+
+\node[stage] (sandbox_exec) at (4.2, 0.8) {
+    \textbf{Execution Sandbox}\\
+    \scriptsize Bash / Code Interpreter
+};
+
+\node[stage] (api_cloud) at (8.4, 0.8) {
+    \textbf{Third-Party Cloud APIs}\\
+    \scriptsize OAuth Tokens \& Data Sinks
+};
+
+\node[stage] (peer_network) at (12.6, 0.8) {
+    \textbf{Swarm Collective}\\
+    \scriptsize Lateral Agent Mesh
+};
+
+% =========================================================================
+% ROW 4: Impact Assets & Compromise Sinks (Y = -1.0 cm)
+% =========================================================================
+\node[asset] (asset_rce) at (0, -1.0) {
+    \textbf{Host Infrastructure}\\
+    \scriptsize RCE / Shell Hijacking (G3)
+};
+
+\node[asset] (asset_exfil) at (4.2, -1.0) {
+    \textbf{Enterprise Secrets}\\
+    \scriptsize Data Exfiltration (G1)
+};
+
+\node[asset] (asset_doc) at (8.4, -1.0) {
+    \textbf{Cloud / Financial Spend}\\
+    \scriptsize Denial of Wallet (G4)
+};
+
+\node[asset] (asset_integrity) at (12.6, -1.0) {
+    \textbf{Decision Integrity}\\
+    \scriptsize Systemic Subversion (G2)
+};
+
+% =========================================================================
+% Defense Cut Envelopes (Rendered on background layer to prevent text masking)
+% =========================================================================
+\begin{scope}[on background layer]
+    \node[defense_cut, fit=(tool_broker), 
+          label={[green!50!black, font=\bfseries\tiny]north west:$\mathcal{K}_{\text{CBAC}}$ Barrier}] {};
+    \node[defense_cut, fit=(retriever), 
+          label={[green!50!black, font=\bfseries\tiny]north east:$\mathcal{K}_{\text{RRS}}$ Barrier}] {};
+    \node[defense_cut, fit=(sandbox_exec), 
+          label={[green!50!black, font=\bfseries\tiny]north east:$\mathcal{K}_{\text{Sandbox}}$ Barrier}] {};
+    \node[defense_cut, fit=(mas_bus), 
+          label={[green!50!black, font=\bfseries\tiny]north east:$\mathcal{K}_{\text{Audit}}$ Barrier}] {};
+\end{scope}
+
+% =========================================================================
+% Attack Edges (Orthogonal and cleanly anchored)
+% =========================================================================
+% Column 1: Direct Injection Path P1
+\draw[attack_edge] (adv_prompt.south) -- (llm_direct.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {P1};
+\draw[attack_edge] (llm_direct.south) -- (tool_broker.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {Unsafe Call};
+\draw[attack_edge] (tool_broker.south) -- (asset_rce.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {G3};
+
+% Column 2: Indirect Injection Path P2
+\draw[attack_edge] (adv_content.south) -- (retriever.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {P2};
+\draw[attack_edge] (retriever.west) -- (llm_direct.east) 
+    node[midway, above=2pt, font=\tiny, text=red!80!black] {Poisoned Context};
+\draw[attack_edge] (sandbox_exec.south) -- (asset_exfil.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {G1};
+
+% Lateral Execution & P3 Cross-Tool Pivot
+\draw[attack_edge] (tool_broker.east) -- (sandbox_exec.west) 
+    node[midway, above=2pt, font=\tiny, text=red!80!black] {Dispatch};
+\draw[attack_edge] (sandbox_exec.east) -- (api_cloud.west) 
+    node[midway, above=2pt, font=\tiny, text=red!80!black] {P3: Pivot};
+
+% Column 3: Memory Poisoning Path P4
+\draw[attack_edge] (adv_rag.south) -- (memory_store.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {P4};
+\draw[attack_edge] (memory_store.south) -- (api_cloud.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {Latent Recall};
+\draw[attack_edge] (api_cloud.south) -- (asset_doc.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {G4};
+
+% Column 4: Swarm Cascade Path P5
+\draw[attack_edge] (adv_peer.south) -- (mas_bus.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {P5};
+\draw[attack_edge] (mas_bus.south) -- (peer_network.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {Worm Spread};
+\draw[attack_edge] (peer_network.south) -- (asset_integrity.north) 
+    node[midway, right=1pt, font=\tiny, text=red!80!black] {G2};
+
+\end{tikzpicture}}
+
+\caption{Causal Threat Graph modeling end-to-end exploit propagation across canonical paths P1, P2, P3, P4, and P5 toward high-value target assets G1--G4. Red boxes denote adversary footholds; blue containers represent internal reasoning and execution substrates; purple boxes represent impact assets. Solid red arrows depict exploit vectors; green dashed contours designate defense interdiction cut barriers positioned on the background layer to sever the kill chain prior to environmental impact.}
+\label{fig:causal_threat_graph}
+\end{figure}

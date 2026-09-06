@@ -1,0 +1,163 @@
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    >=Stealth,
+    % Background cards for topology boundaries
+    topo_card/.style={draw=gray!30, fill=gray!3, rounded corners=6pt, line width=0.8pt},
+    topo_header/.style={font=\bfseries\small, text=blue!90!black, align=center},
+    % Agent styles with rich visual depth
+    agent_clean/.style={draw=blue!75!black, fill=blue!8, circle, line width=1.0pt, inner sep=1pt, minimum size=1.15cm, align=center},
+    agent_hub/.style={draw=purple!80!black, fill=purple!10, rounded corners=4pt, line width=1.2pt, inner sep=3pt, minimum width=2.6cm, minimum height=0.9cm, align=center},
+    agent_infected/.style={draw=red!80!black, fill=red!14, circle, line width=1.2pt, dashed, inner sep=1pt, minimum size=1.15cm, align=center},
+    blackboard_pool/.style={draw=orange!85!black, fill=orange!10, rounded corners=5pt, line width=1.1pt, align=center, minimum width=2.8cm, minimum height=0.9cm},
+    % Communication and threat paths
+    legit_edge/.style={->, thick, draw=gray!70!black, shorten >= 2pt, shorten <= 2pt},
+    sync_edge/.style={<->, thick, draw=gray!70!black, shorten >= 2pt, shorten <= 2pt},
+    worm_edge/.style={->, very thick, draw=red!80!black, dashed, shorten >= 2pt, shorten <= 2pt},
+    poison_edge/.style={->, very thick, draw=red!80!black, dotted, shorten >= 2pt, shorten <= 2pt},
+    % Subtitle & label badges
+    badge_vuln/.style={draw=red!70!black, fill=red!6, rounded corners=2pt, font=\sffamily\tiny\bfseries, text=red!80!black, inner sep=2pt}
+]
+
+% =========================================================================
+% SUBFIGURE (a): Hierarchical Orchestrator-Worker
+% =========================================================================
+\begin{scope}[shift={(0,0)}]
+    % Enclosure container
+    \draw[topo_card] (-0.9, -0.6) rectangle (4.1, 4.0);
+    \node[topo_header] at (1.6, 3.65) {(a) Hierarchical Orchestrator};
+
+    % Central Orchestrator Hub
+    \node[agent_hub] (orch) at (1.6, 2.7) {
+        \textbf{Orchestrator Hub} ($\Omega$)\\
+        \tiny [Task Decomp $\cdot$ Routing]
+    };
+
+    % Worker agents
+    \node[agent_clean] (w1) at (-0.05, 0.95) {
+        \textbf{Worker 1}\\
+        \tiny ($\mathcal{A}_1^{\text{sub}}$)
+    };
+    \node[agent_infected] (w2) at (1.6, 0.95) {
+        \textbf{Worker 2*}\\
+        \tiny ($\mathcal{A}_2^*$ Comp.)
+    };
+    \node[agent_clean] (w3) at (3.25, 0.95) {
+        \textbf{Worker 3}\\
+        \tiny ($\mathcal{A}_3^{\text{sub}}$)
+    };
+
+    % Dispatch and upward injection flows
+    \draw[legit_edge] (orch.south west) -- (w1.north) 
+        node[midway, left=1pt, font=\tiny] {Task};
+    \draw[worm_edge] (w2.north) -- (orch.south) 
+        node[midway, right=2pt, font=\tiny, text=red!80!black] {\textbf{Upward IPI}};
+    \draw[legit_edge] (orch.south east) -- (w3.north) 
+        node[midway, right=1pt, font=\tiny] {Task};
+
+    % Vulnerability summary badge
+    \node[badge_vuln] at (1.6, -0.2) {Blast Radius: Central Single Point of Failure};
+\end{scope}
+
+% =========================================================================
+% SUBFIGURE (b): Decentralized Swarm Mesh
+% =========================================================================
+\begin{scope}[shift={(5.6,0)}]
+    % Enclosure container
+    \draw[topo_card] (-0.9, -0.6) rectangle (4.1, 4.0);
+    \node[topo_header] at (1.6, 3.65) {(b) Decentralized Swarm Mesh};
+
+    % Pentagonal mesh layout (Center = (1.6, 1.7), R = 1.35 cm)
+    \node[agent_infected] (p1) at (1.60, 3.05) {
+        \textbf{Peer 1*}\\
+        \tiny ($\mathcal{M}_1^*$ Seed)
+    };
+    \node[agent_clean]    (p2) at (0.32, 2.05) {
+        \textbf{Peer 2}\\
+        \tiny ($\mathcal{M}_2$)
+    };
+    \node[agent_infected] (p3) at (2.88, 2.05) {
+        \textbf{Peer 3*}\\
+        \tiny ($\mathcal{M}_3^*$ Inf.)
+    };
+    \node[agent_clean]    (p4) at (0.81, 0.58) {
+        \textbf{Peer 4}\\
+        \tiny ($\mathcal{M}_4$)
+    };
+    \node[agent_clean]    (p5) at (2.39, 0.58) {
+        \textbf{Peer 5}\\
+        \tiny ($\mathcal{M}_5$)
+    };
+
+    % Worm epidemic propagation edges
+    \draw[worm_edge] (p1.south west) -- (p2.north) 
+        node[pos=0.4, above left=1pt, font=\tiny, text=red!80!black] {\textbf{Worm}};
+    \draw[worm_edge] (p1.south east) -- (p3.north) 
+        node[pos=0.4, above right=1pt, font=\tiny, text=red!80!black] {\textbf{Worm}};
+    \draw[worm_edge] (p3.south) -- (p5.north) 
+        node[midway, right=1pt, font=\tiny, text=red!80!black] {Cascade};
+    \draw[sync_edge] (p2.south) -- (p4.north) 
+        node[midway, left=1pt, font=\tiny] {Sync};
+    \draw[sync_edge] (p4.east) -- (p5.west) 
+        node[midway, below=1pt, font=\tiny] {Vote};
+    \draw[legit_edge] (p2.east) -- (p3.west) 
+        node[midway, above=1pt, font=\tiny] {RPC};
+
+    % Vulnerability summary badge
+    \node[badge_vuln] at (1.6, -0.2) {Epidemic Velocity: Exponential Spread $dI/dt$};
+\end{scope}
+
+% =========================================================================
+% SUBFIGURE (c): Shared Blackboard Architecture
+% =========================================================================
+\begin{scope}[shift={(11.2,0)}]
+    % Enclosure container
+    \draw[topo_card] (-0.9, -0.6) rectangle (4.1, 4.0);
+    \node[topo_header] at (1.6, 3.65) {(c) Shared Blackboard State};
+
+    % Shared Memory Blackboard
+    \node[blackboard_pool] (bb) at (1.6, 1.7) {
+        \textbf{Shared State Blackboard}\\
+        \tiny Memory Pool ($\mathcal{S}_{\text{MAS}}$)\\
+        \tiny [Working Vectors $\cdot$ Shared Context]
+    };
+
+    % Autonomous Agents accessing blackboard
+    \node[agent_clean]    (b1) at (0.2, 2.95) {
+        \textbf{Agent A}\\
+        \tiny ($\mathcal{M}_A$)
+    };
+    \node[agent_infected] (b2) at (3.0, 2.95) {
+        \textbf{Agent B*}\\
+        \tiny ($\mathcal{M}_B^*$ Poison)
+    };
+    \node[agent_clean]    (b3) at (0.2, 0.55) {
+        \textbf{Agent C}\\
+        \tiny ($\mathcal{M}_C$)
+    };
+    \node[agent_clean]    (b4) at (3.0, 0.55) {
+        \textbf{Agent D}\\
+        \tiny ($\mathcal{M}_D$)
+    };
+
+    % Read/Write and Poison flows
+    \draw[sync_edge] (b1.south east) -- (bb.north west) 
+        node[pos=0.4, above left=1pt, font=\tiny] {Write};
+    \draw[poison_edge] (b2.south west) -- (bb.north east) 
+        node[pos=0.4, above right=1pt, font=\tiny, text=red!80!black] {\textbf{Poison}};
+    \draw[worm_edge] (bb.south west) -- (b3.north east) 
+        node[pos=0.4, below left=1pt, font=\tiny, text=red!80!black] {\textbf{Corrupted}};
+    \draw[sync_edge] (b4.north west) -- (bb.south east) 
+        node[pos=0.4, below right=1pt, font=\tiny] {Read};
+
+    % Vulnerability summary badge
+    \node[badge_vuln] at (1.6, -0.2) {Context Contamination: Cross-Agent Memory Poison};
+\end{scope}
+
+\end{tikzpicture}%
+}
+\caption{Multi-Agent System (MAS) coordination topologies and vulnerability propagation dynamics across three canonical architectures: (a) Hierarchical Orchestrator, (b) Decentralized Swarm Mesh, and (c) Shared Blackboard. Rounded background cards delineate topological trust boundaries; red dashed circles with asterisks (*) mark compromised/adversarial agents; solid arrows indicate legitimate task dispatches and state updates; dashed and dotted red vectors trace exploit mechanics (Upward Prompt Injection, self-replicating prompt worms, and asynchronous state poisoning). Hierarchical systems concentrate catastrophic risk at the central orchestrator, peer meshes foster exponential prompt-worm propagation ($dI/dt$), and shared blackboards subject all downstream consumers to persistent memory corruption.}
+\label{fig:mas_topologies}
+\end{figure}

@@ -1,0 +1,18 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+The transition from static, conversational large language models to autonomous Agentic AI represents a fundamental evolution in artificial intelligence. By integrating iterative reasoning, multi-tier memory systems, heterogeneous tools, and collaborative multi-agent communication networks, agentic systems achieve substantial problem-solving autonomy. However, this survey demonstrates that the integration of probabilistic semantic reasoning with deterministic environment effectors systematically expands the attack surface, dismantling traditional security perimeters.
+
+Through a systematic investigation, this paper has mapped the attack surface across the agentic lifecycle:
+\begin{enumerate}
+    \setlength{\itemsep}{1pt}
+    \setlength{\parskip}{0pt}
+    \item We established an end-to-end reference architecture formalizing the expanded Trusted Computing Base (TCB) and trust boundaries across single-agent, hierarchical, and decentralized swarms.
+    \item We developed a granular taxonomy of attack vectors, formalizing micro-primitives across perception, retrieval, memory, tool brokering, and operating system execution, while detailing multi-step exploit kill chains (P1--P6).
+    \item We provided frontier analyses of emerging modalities and protocols, establishing the security vulnerabilities of multimodal GUI/OS computer-use agents and dissecting protocol-level risks within the Model Context Protocol (MCP).
+    \item We modeled multi-agent coordination failures, examining Byzantine consensus poisoning, prompt-worm epidemic spreading (the Agent Smith phenomenon), and the fundamental Multi-Agent Security Tax.
+    \item We formulated an architectural defense-in-depth framework bridging empirical guardrails, structured querying, capability-based sandboxing, and formal invariant verification.
+    \item We delivered a unified comparative matrix of contemporary security benchmarks, formalized eight quantitative security metrics, and harmonized technical vulnerabilities with international governance standards (OWASP GenAI Top 10, MITRE ATLAS, NIST AI RMF, and the EU AI Act).
+\end{enumerate}
+
+Ultimately, securing autonomous agentic AI requires moving beyond the assumption of prompt-level alignment. As long as models process untrusted data within the same semantic space as executable instructions, software vulnerabilities will remain latent. Transforming agentic AI into a resilient technology demands a systematic transition toward provably safe execution kernels, capability-based access control, cryptographic inter-agent provenance, and continuous CI/CD red teaming. This survey provides researchers, security engineers, and standards bodies with foundational principles and an actionable technical roadmap required to engineer dependable, trustworthy, and verifiable autonomous systems.

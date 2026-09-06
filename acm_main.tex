@@ -1,0 +1,96 @@
+﻿\documentclass[acmsmall,screen,nonacm]{acmart}
+
+% Metadata for ACM Computing Surveys (CSUR)
+\acmJournal{CSUR}
+\acmVolume{58}
+\acmNumber{1}
+\acmArticle{1}
+\acmYear{2026}
+\acmMonth{1}
+
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+
+% Compatibility macro for IEEEPARstart
+\providecommand{\IEEEPARstart}[2]{#1#2}
+
+\begin{document}
+
+\title{The Expanding Attack Surface of Agentic AI: Vulnerabilities, Exploitation Vectors, Defenses, and Benchmarks}
+
+\author{Seyedakbar Mostafavi}
+\email{a.mostafavi@yazd.ac.ir}
+\orcid{0000-0003-1246-8608}
+\affiliation{%
+  \institution{Yazd University}
+  \department{Department of Computer Engineering}
+  \city{Yazd}
+  \postcode{89195-741}
+  \country{Iran}
+}
+
+\begin{abstract}
+The integration of Large Language Models (LLMs) with iterative planning routines, persistent state repositories, heterogeneous external tools, and multi-agent coordination frameworks has driven the transition from static conversational systems to autonomous Agentic Artificial Intelligence (AI). While this architecture unlocks broad autonomous capabilities, it concurrently dismantles traditional software and security perimeters. Agentic systems grant probabilistic models direct effectuation authority over digital and physical environments, collapsing the conventional distinction between untrusted data and executable control logic. This paper presents a systematic survey and rigorous taxonomical framework of the attack surface, exploitation vectors, defensive architectures, and empirical evaluation testbeds governing agentic AI.
+
+We formalize an end-to-end reference architecture across the perception-cognition-action-reflection lifecycle, systematically dissecting the expanded Trusted Computing Base (TCB) and delineating fragile trust boundaries across single-agent, hierarchical, and decentralized multi-agent topologies. Expanding upon foundational systematizations, we establish an analytical taxonomy of attacks spanning prompt-level manipulations, Retrieval-Augmented Generation (RAG) and embedding poisoning, memory and reflection corruption, tool shadowing and Remote Code Execution (RCE), Model Context Protocol (MCP) vulnerabilities, and multi-agent Byzantine consensus subversion. Furthermore, we critically analyze defense-in-depth mechanisms, contrasting empirical input/output guardrails with formal policy verification, capability-based sandboxing, and runtime invariant enforcement. Finally, we provide a unified comparative matrix of contemporary security benchmarks, examine emerging governance mandates, and articulate an agenda of open research challenges required to engineer secure, resilient, and verifiable autonomous systems.
+\end{abstract}
+
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10002978.10003022</concept_id>
+       <concept_desc>Security and privacy~Software and application security</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010147.10010178</concept_id>
+       <concept_desc>Computing methodologies~Artificial intelligence</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010147.10010178.10010219</concept_id>
+       <concept_desc>Computing methodologies~Distributed artificial intelligence</concept_desc>
+       <concept_significance>400</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10002978.10002991.10002992</concept_id>
+       <concept_desc>Security and privacy~Authentication</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Security and privacy~Software and application security}
+\ccsdesc[500]{Computing methodologies~Artificial intelligence}
+\ccsdesc[400]{Computing methodologies~Distributed artificial intelligence}
+\ccsdesc[300]{Security and privacy~Authentication}
+
+\keywords{Agentic AI, Large Language Model (LLM) Security, Attack Surface, Tool Execution Security, Multi-Agent Systems (MAS), Model Context Protocol (MCP), Retrieval-Augmented Generation (RAG) Poisoning, Indirect Prompt Injection, Defense-in-Depth, Security Benchmarking.}
+
+\maketitle
+
+\input{sections/01_introduction.tex}
+\input{sections/02_architecture.tex}
+\input{sections/03_threat_model.tex}
+\input{sections/04_attack_taxonomy.tex}
+\input{sections/05_modality_mcp.tex}
+\input{sections/06_multi_agent.tex}
+\input{sections/07_defenses.tex}
+\input{sections/08_benchmarks_metrics.tex}
+\input{sections/09_standards_governance.tex}
+\input{sections/10_open_challenges.tex}
+\input{sections/11_conclusion.tex}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}

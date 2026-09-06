@@ -1,0 +1,133 @@
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    >=Stealth,
+    % Box styles
+    tcb_container/.style={draw=blue!60!black, fill=blue!3, rounded corners=6pt, line width=0.9pt},
+    ext_container/.style={draw=purple!60!black, fill=purple!3, rounded corners=6pt, line width=0.9pt},
+    tcb_host/.style={draw=blue!85!black, fill=blue!12, rounded corners=4pt, line width=1.1pt, align=center, inner sep=4pt},
+    tcb_client/.style={draw=blue!75!black, fill=white, rounded corners=4pt, line width=1.0pt, align=center, inner sep=4pt},
+    tcb_sub/.style={draw=blue!60!black, fill=blue!6, rounded corners=3pt, line width=0.8pt, align=center, inner sep=3pt},
+    mcp_server/.style={draw=purple!80!black, fill=purple!12, rounded corners=4pt, line width=1.1pt, align=center, inner sep=4pt},
+    threat_box/.style={draw=red!80!black, fill=red!7, dashed, rounded corners=3pt, line width=0.8pt, align=center, inner sep=2.5pt},
+    % Edges
+    rpc_edge/.style={<->, thick, draw=blue!75!black, shorten >= 2pt, shorten <= 2pt},
+    flow_edge/.style={->, thick, draw=gray!75!black, shorten >= 2pt, shorten <= 2pt},
+    threat_edge/.style={->, very thick, draw=red!80!black, dashed, shorten >= 2pt, shorten <= 2pt},
+    % Badges
+    badge_rpc/.style={draw=blue!70!black, fill=white, rounded corners=2pt, font=\sffamily\tiny\bfseries, text=blue!90!black, inner sep=1.8pt},
+    badge_threat/.style={draw=red!80!black, fill=white, rounded corners=2pt, font=\sffamily\tiny\bfseries, text=red!85!black, inner sep=1.8pt}
+]
+
+% =========================================================================
+% CONTAINERS & BOUNDARY
+% =========================================================================
+% Left: Trusted Computing Base (TCB)
+\draw[tcb_container] (-0.3, -0.5) rectangle (4.9, 6.9);
+\node[font=\bfseries\scriptsize, text=blue!90!black, anchor=north] at (2.3, 6.75) {Trusted Computing Base (Host \& Client)};
+
+% Right: External / Semi-Trusted Servers
+\draw[ext_container] (7.1, -0.5) rectangle (13.3, 6.9);
+\node[font=\bfseries\scriptsize, text=purple!90!black, anchor=north] at (10.2, 6.75) {External / Semi-Trusted MCP Domain};
+
+% Vertical Trust Boundary Delimiter
+\draw[draw=red!70!black, dashed, line width=1.4pt] (6.0, -0.5) -- (6.0, 6.9);
+\node[draw=red!70!black, fill=white, rounded corners=3pt, font=\bfseries\tiny, text=red!85!black, inner sep=2pt] at (6.0, 6.75) {MCP Trust Boundary};
+
+% =========================================================================
+% LEFT CONTAINER: TCB COMPONENTS
+% =========================================================================
+% User Ingress
+\node[draw=gray!60, fill=white, rounded corners=3pt, inner sep=2.5pt, font=\scriptsize] (user) at (2.3, 5.7) {
+    \textbf{User Ingress} $\cdot$ Prompt / Objective $u \in \mathcal{U}$
+};
+
+% MCP Host
+\node[tcb_host, minimum width=4.7cm, minimum height=1.1cm] (host) at (2.3, 4.35) {
+    \textbf{MCP Host Application} ($\mathcal{M}, \Omega_{\text{host}}$)\\
+    \scriptsize Model Reasoning $\cdot$ Session Orchestration\\
+    \tiny [Context Window $\cdot$ Policy Broker $\cdot$ HITL Approval Gate]
+};
+\draw[flow_edge] (user.south) -- (host.north);
+
+% MCP Client
+\node[tcb_client, minimum width=4.7cm, minimum height=1.1cm] (client) at (2.3, 2.5) {
+    \textbf{MCP Client Runtime} ($\mathcal{C}_{\text{mcp}}$)\\
+    \scriptsize Connection Lifecycle $\cdot$ Protocol Translation\\
+    \tiny [JSON-RPC 2.0 Dispatcher $\cdot$ Dynamic Schema Registry]
+};
+
+\draw[rpc_edge] (host.south) -- (client.north)
+    node[midway, fill=white, inner sep=1pt, font=\tiny] {Model Tool Call / Response};
+
+% Transport Layer
+\node[tcb_sub, minimum width=4.7cm] (transport) at (2.3, 0.7) {
+    \textbf{Transport Substrate:}\\
+    \tiny Local Standard I/O (\texttt{stdio}) \textbf{/} Remote SSE over HTTP POST
+};
+
+\draw[rpc_edge] (client.south) -- (transport.north)
+    node[midway, fill=white, inner sep=1pt, font=\tiny] {JSON-RPC Framing};
+
+% =========================================================================
+% RIGHT CONTAINER: MCP SERVERS & THREAT PROFILES
+% =========================================================================
+% Server 1: Resources
+\node[mcp_server, minimum width=5.7cm] (res_server) at (10.2, 5.5) {
+    \textbf{MCP Resource Server} ($\mathcal{S}_{\text{res}}$)\\
+    \tiny Contextual Read Endpoints (\texttt{file://}, \texttt{postgres://}, \texttt{git://})
+};
+\node[threat_box, minimum width=5.7cm] (threat_res) at (10.2, 4.55) {
+    \textbf{Threat T2: URI Path Traversal \& IDOR} (\texttt{file:///etc/passwd})\\
+    \tiny Arbitrary host file read via unvalidated resource parameter injection
+};
+
+% Server 2: Prompts
+\node[mcp_server, minimum width=5.7cm] (pmt_server) at (10.2, 3.35) {
+    \textbf{MCP Prompt Server} ($\mathcal{P}_{\text{pmt}}$)\\
+    \tiny Pre-Packaged Context Templates \& Directives (\texttt{prompts/get})
+};
+\node[threat_box, minimum width=5.7cm] (threat_pmt) at (10.2, 2.4) {
+    \textbf{Threat T3: Adversarial Prompt Backdoors \& Jailbreaks}\\
+    \tiny Sleeper instructions and goal hijacking embedded in server prompts
+};
+
+% Server 3: Tools
+\node[mcp_server, minimum width=5.7cm] (tool_server) at (10.2, 1.2) {
+    \textbf{MCP Tool Server} ($\mathcal{T}_{\text{tool}}$)\\
+    \tiny Dynamic Tool Registration (\texttt{tools/list}) $\cdot$ Executable APIs
+};
+\node[threat_box, minimum width=5.7cm] (threat_tool) at (10.2, 0.25) {
+    \textbf{Threat T1/T4: Tool Shadowing \& Approval Fatigue}\\
+    \tiny Schema spoofing during handshake; parameter drift in uninspected calls
+};
+
+% =========================================================================
+% CROSS-BOUNDARY PROTOCOL FLOWS (CLEAR PARALLEL ORTHOGONAL ROUTING)
+% =========================================================================
+% Resource read flow: Client (top anchor) -> Res Server
+\draw[rpc_edge] ([yshift=8pt]client.east) -- ++(1.4, 0) |- (res_server.west)
+    node[pos=0.72, above, badge_rpc] {\texttt{resources/read}};
+
+% Prompt get flow: Client (bottom anchor) -> Prompt Server
+\draw[rpc_edge] ([yshift=-8pt]client.east) -- ++(1.4, 0) |- (pmt_server.west)
+    node[pos=0.72, above, badge_rpc] {\texttt{prompts/get}};
+
+% Tool call flow: Transport -> Tool Server
+\draw[rpc_edge] (transport.east) -- ++(1.4, 0) |- (tool_server.west)
+    node[pos=0.72, above, badge_rpc] {\texttt{tools/call}};
+
+% =========================================================================
+% ADVERSARIAL THREAT OVERLAYS (DASHED RED PATHS)
+% =========================================================================
+% Attack T1: Tool Shadowing from Tool Server into Client Schema Registry
+\draw[threat_edge] (tool_server.west) -- ++(-0.6, 0) |- ([yshift=2pt]transport.east)
+    node[pos=0.35, below=1pt, badge_threat] {T1: Rogue Tool Ingestion};
+
+\end{tikzpicture}%
+}
+\caption{Architectural decomposition, trust boundaries, and protocol threat vectors in Model Context Protocol (MCP) deployments. Solid blue containers enclose the Trusted Computing Base (Host application and Client runtime); dashed purple containers denote standalone, semi-trusted MCP servers exposing Resources, Prompts, and Tools across the perimeter. Red dashed annotations and boxes isolate primary exploit classes: (T1) tool schema poisoning and tool shadowing during dynamic registration (\texttt{tools/list}), (T2) resource URI path traversal and IDOR (\texttt{file:///etc/passwd}), (T3) adversarial template injection and sleeper jailbreaks via server-supplied prompts, and (T4) host-level approval fatigue leading to uninspected parameter execution during tool invocation (\texttt{tools/call}).}
+\label{fig:mcp_boundaries}
+\end{figure}

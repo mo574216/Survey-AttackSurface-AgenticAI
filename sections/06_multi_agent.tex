@@ -1,0 +1,45 @@
+\section{Multi-Agent Systems (MAS): Topologies, Consensus, and Swarm Epidemics}
+\label{sec:multi_agent}
+
+While single-agent systems exhibit linear attack surfaces, Multi-Agent Systems (MAS) introduce combinatorial risks arising from inter-agent communication, collaborative deliberation, and distributed task delegation~\cite{dewitt2025open, raza2026trism}.
+
+\subsection{Topology-Specific Attack Vectors}
+\label{subsec:mas_topologies}
+
+Vulnerabilities in MAS are strongly conditioned by the underlying coordination topology, as illustrated in Fig.~\ref{fig:mas_topologies}:
+
+\input{figures/fig_mas_topologies.tex}
+
+\begin{itemize}
+    \item \textbf{Hierarchical / Orchestrator-Worker Networks:} A central orchestrator decomposes tasks and routes sub-prompts to specialized subordinates. A compromise of the orchestrator collapses the entire system perimeter. Conversely, if a subordinate worker agent is subverted via indirect injection, it can return adversarially crafted observations to the orchestrator, manipulating the orchestrator's global planning logic (Upward Prompt Injection)~\cite{narajala2025securing, hammar2026multiagent}.
+    \item \textbf{Decentralized Peer-to-Peer (P2P) Meshes:} Agents communicate directly without centralized moderation. Without strict cryptographic authentication, rogue agents can inject fabricated status messages, impersonate peer agents, or broadcast conflicting task assignments.
+    \item \textbf{Shared Blackboard Architectures:} Agents asynchronously read from and write to a shared memory pool or database. An attacker compromising a single low-privilege agent can poison the blackboard state, inducing secondary failures across all dependent agents that consume the shared context~\cite{chen2024agentpoison}.
+    \item \textbf{Consensus and Multi-Agent Debate:} Systems that employ debate protocols or majority voting to arrive at verified decisions are vulnerable to Sybil attacks. An adversary registering multiple lightweight agents can manipulate the aggregate distribution of opinions, skewing the consensus toward unsafe or fraudulent conclusions~\cite{chen2024blockagents}.
+\end{itemize}
+
+\subsection{Communication Channel Exploits and Delegation Abuse}
+\label{subsec:communication_exploits}
+
+Inter-agent communication frameworks (e.g., AutoGen, CrewAI, LangGraph) frequently treat messages received over internal buses as implicitly trusted:
+\begin{itemize}
+    \item \textbf{Role Confusion and Identity Spoofing:} In natural language agent protocols, agents identify themselves via string prefixes (e.g., \texttt{Sender: SupervisorAgent}). An attacker can inject formatted text that mimics system-level delegation headers, deceiving receiving agents into executing privileged actions under the assumption that the request originated from an authoritative controller.
+    \item \textbf{Confused Deputy and Delegation Bypass:} A low-privilege agent lacking direct execution tools (e.g., shell access) can format a request as a natural language query to an execution-capable peer. If the target agent fails to evaluate the provenance and original authorization of the end-user request, it acts as a confused deputy, executing unauthorized operations on behalf of the attacker~\cite{dehghantanha2026sok}.
+\end{itemize}
+
+\subsection{Swarm Epidemics: The Agent Smith Phenomenon}
+\label{subsec:swarm_epidemics}
+
+A notable demonstration in multi-agent vulnerability research is the emergence of self-replicating prompt worms in agent networks. In \textit{Agent Smith}, Gu~\textit{et al.}~\cite{gu2024agent} demonstrated that a single adversarial image or text input can compromise large populations of multimodal LLM agents rapidly. 
+
+The epidemic propagation dynamics can be formalized through an infectious transmission model. Let $N(t)$ denote the number of compromised agents at communication round $t$. When an infected agent interacts with $k$ peer agents per round with infection probability $\beta$, the transmission rate satisfies
+\begin{equation}
+    \frac{dN(t)}{dt} = \beta k N(t) \left( 1 - \frac{N(t)}{N_{\text{total}}} \right).
+\end{equation}
+Because LLMs are trained to be cooperative communicators, an infected agent embeds the self-replicating injection payload within legitimate task outputs. Each recipient agent parses the payload during context construction, becomes infected, and re-transmits the payload to its subsequent collaborators, precipitating network-wide propagation, as analytically modeled by Lee~\textit{et al.}~\cite{lee2026the} and Gu~\textit{et al.}~\cite{gu2024agent, dewitt2025open}. Drawing from classical dependable computing, mitigating such cascading failures necessitates autonomic fault isolation and resilient authenticated execution in untrusted environments~\cite{bower2005autonomic, kirkpatrick2012resilient}.
+
+\subsection{The Multi-Agent Security Tax}
+\label{subsec:security_tax}
+
+In a foundational empirical investigation, Peign{\'e}~\textit{et al.}~\cite{peigne2025multi} formalized the \textit{Multi-Agent Security Tax}, quantifying the trade-off between agent collaboration capabilities and susceptibility to security compromise. Their findings reveal that increasing agent autonomy and inter-agent communication bandwidth monotonically degrades system resilience against indirect manipulation. 
+
+Implementing aggressive defensive filtering or ``vaccination'' prompts at inter-agent communication boundaries dampens epidemic spread; however, it introduces functional degradation, impairing complex task completion rates by up to 35\%~\cite{peigne2025multi}. Balancing collaborative utility with topological isolation remains an essential challenge in multi-agent systems engineering.

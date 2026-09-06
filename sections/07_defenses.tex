@@ -1,0 +1,51 @@
+\section{Defense-in-Depth: From Empirical Guardrails to Formal Verification}
+\label{sec:defenses}
+
+Mitigating the heterogeneous attack surface of agentic AI requires an architectural defense-in-depth framework, as conceptualized in Fig.~\ref{fig:defense_layers}. Because foundation models are probabilistic and vulnerable to worst-case semantic inputs, no single safeguard suffices~\cite{dehghantanha2026sok}. Robust security demands layered controls operating across data ingestion, model inference, agentic planning, and environment execution. Table~\ref{tab:defenses_matrix} provides a synthesis of defensive mechanisms across the operational lifecycle.
+
+\input{tables/tab_defenses_matrix.tex}
+\input{figures/fig_defense_layers.tex}
+
+\subsection{Data-Level and Pre-Ingestion Hygiene}
+\label{subsec:data_defenses}
+
+Data-level defenses operate before external text reaches the model context:
+\begin{itemize}
+    \item \textbf{Content Canonicalization and Active Script Stripping:} Raw documents (HTML, PDF, Office formats) must be converted into stripped, canonical text representations. Parsing scripts, active macros, and embedded hyperlinks without execution privileges eliminates non-LLM injection vectors~\cite{dehghantanha2026sok}.
+    \item \textbf{Cryptographic Provenance and Source Allow-Listing:} Documents indexed into RAG vector stores should carry cryptographic signatures from authorized originators. During retrieval, similarity scores can be dynamically weighted by source trust coefficients, pruning untrusted or recently modified documents. Grounded in formal data provenance verification~\cite{xu2012dataprovenance}, provenance-aware access control frameworks~\cite{sun2016a}, and forgery detection schemes~\cite{sultana2015a}, provenance-aware tracing architectures (e.g., TrustTrace~\cite{chen2026trusttrace}) establish auditable chains of custody from raw input ingestion to retrieval ranking.
+    \item \textbf{Access-Control List (ACL)-Aware Chunking:} Document chunk boundaries must align strictly with enterprise access partitions. Multi-tenant vector stores must enforce query-time ACL filters, guaranteeing that an agent operating on behalf of user $u$ cannot retrieve embeddings indexed under tenant $u' \neq u$.
+\end{itemize}
+
+\subsection{Inference-Level Guardrails and Structured Querying}
+\label{subsec:inference_defenses}
+
+Once untrusted data enters the pipeline, inference-level controls prevent data payloads from mutating into instructions:
+\begin{itemize}
+    \item \textbf{Structured Query Enforcement (StruQ):} Chen~\textit{et al.}~\cite{chen2025struq} introduced StruQ, a formal framework that enforces structural separation between user commands and external data. By formatting data parameters into strictly parsed typed structures, StruQ renders prompt injection attacks syntactically invalid, preventing the model from executing embedded commands.
+    \item \textbf{Preference Alignment via SecAlign:} Addressing the vulnerability of RLHF models to prompt injection, Chen~\textit{et al.}~\cite{chen2025secalign} developed SecAlign. By employing Direct Preference Optimization (DPO) on paired trajectories of successful vs. resisted injection attacks, SecAlign strengthens the model's intrinsic resistance to indirect prompt injection while preserving base task utility.
+    \item \textbf{Dual-LLM Supervisor Sentinels:} Deploying isolated, lightweight guardrail models (such as Llama Guard~\cite{inan2023llama} or ShieldGemma~\cite{zeng2024shieldgemma}) to inspect inbound prompts and outbound tool calls provides an out-of-band policy filter. Furthermore, game-theoretic sentinels like DataSentinel~\cite{liu2025datasentinel}, resource-aware guardrails like RAPID~\cite{nkoro2026rapid}, and autonomous agentic guardians~\cite{singer2026autonomous} actively intercept adversarial payloads before cognitive parsing.
+\end{itemize}
+
+\subsection{Agentic Logic and Planning Controls}
+\label{subsec:planning_defenses}
+
+The planning engine must operate under strict least-privilege principles:
+\begin{itemize}
+    \item \textbf{Capability-Based and Purpose-Aware Access Control:} Tools must not be exposed wholesale to the agent. Instead, agents should be provisioned with minimal, ephemeral capability tokens scoped strictly to the current sub-task~\cite{dehghantanha2026sok}. Drawing from unified privacy-enhanced access control~\cite{barker2012access}, purpose-based database access models~\cite{colombo2017enhancing}, context-based mobile access architectures~\cite{shebaro2015contextbased}, and automated policy extraction from natural language specifications~\cite{narouei2018automatic}, the agentic orchestrator dynamically synthesizes fine-grained execution bounds.
+    \item \textbf{Plan-Then-Act Critic Modules:} High-impact plans must undergo two-phase verification. In Phase 1, the planner proposes an abstract sequence of actions $\pi = \langle a_1, a_2, \dots \rangle$. In Phase 2, an independent, isolated critic module (or deterministic rule engine) validates the plan against security policies before any tool dispatch occurs.
+    \item \textbf{Anti-Fatigue Human-in-the-Loop (HITL) Protocols:} To counter confirmation fatigue and deceptive agent justifications, HITL interfaces must display deterministic diffs and parameter hashes rather than model-generated text. Critical actions (e.g., database writes or financial transfers) require out-of-band multi-factor authentication (MFA).
+\end{itemize}
+
+\subsection{Environment-Level Sandboxing and Formal Invariants}
+\label{subsec:environment_defenses}
+
+At the execution boundary, defenses enforce hard physical constraints regardless of model intent:
+\begin{itemize}
+    \item \textbf{Ephemeral Micro-VM Isolation and Replicated Execution:} Code interpreters and shell tools must execute inside isolated, short-lived micro-VMs (e.g., Firecracker, Kata Containers) or secure container kernels (e.g., gVisor) with seccomp syscall filters blocking dangerous primitives (e.g., \texttt{ptrace}, \texttt{mount})~\cite{liu2024demystifying}. Combining runtime replication defenses~\cite{salamat2011runtime} with container cloud security principles~\cite{jin2019dseom, gao2021a} provides fault tolerance and stops cross-agent container side-channel exploits.
+    \item \textbf{Zero-Trust Egress Proxies:} By default, execution environments must enforce a strict deny-all egress policy. When network access is required, traffic must be mediated through an egress filtering proxy enforcing DNS allow-lists and content inspection, preventing data exfiltration and reverse shell connections.
+    \item \textbf{Formal Contract Verification:} Modeling agent actions as state transition programs over typed resources enables runtime invariant verification. Let $\mathcal{I}: \mathcal{S} \to \{0, 1\}$ define a safety invariant (e.g., ``the agent shall not delete files outside \texttt{/workspace}''). Before executing any action $a$, the execution substrate verifies that the transition satisfies
+    \begin{equation}
+        \forall s \in \mathcal{S}, \quad \mathcal{I}(s) \implies \mathcal{I}(\delta(s, a)),
+    \end{equation}
+    where $\delta(s, a)$ is the predicted post-state. If the invariant is violated, execution is deterministically aborted.
+\end{itemize}

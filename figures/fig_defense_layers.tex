@@ -1,0 +1,137 @@
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    >=Stealth,
+    % Layer card styles
+    card_l1/.style={draw=green!60!black, fill=green!6, rounded corners=3pt, line width=0.8pt, inner sep=3pt, text width=4.5cm},
+    card_l2/.style={draw=blue!70!black, fill=blue!6, rounded corners=3pt, line width=0.8pt, inner sep=3pt, text width=4.5cm},
+    card_l3/.style={draw=orange!80!black, fill=orange!6, rounded corners=3pt, line width=0.8pt, inner sep=3pt, text width=4.5cm},
+    card_l4/.style={draw=teal!70!black, fill=teal!6, rounded corners=3pt, line width=0.8pt, inner sep=3pt, text width=4.5cm},
+    card_l5/.style={draw=purple!70!black, fill=purple!6, rounded corners=3pt, line width=0.8pt, inner sep=3pt, text width=4.5cm},
+    % Threat interdiction badge styles
+    threat_badge/.style={draw=red!75!black, fill=red!7, rounded corners=2pt, line width=0.6pt, inner sep=2.5pt, text width=2.1cm, align=left, font=\sffamily\tiny},
+    % Flow arrows
+    flow_arrow/.style={->, thick, draw=gray!75!black, shorten >= 2pt, shorten <= 2pt},
+    interdict_arrow/.style={->, thick, draw=red!70!black, dashed, shorten >= 2pt, shorten <= 2pt},
+    feedback_arrow/.style={->, thick, draw=purple!80!black, dashed, shorten >= 2pt, shorten <= 2pt}
+]
+
+% =========================================================================
+% TOP BANNER: Ingress Stream (Centered across cards and badges)
+% =========================================================================
+\node[draw=gray!50!black, fill=gray!10, rounded corners=2pt, line width=0.6pt, text width=7.0cm, align=center, inner sep=2.5pt] (ingress_banner) at (0.85, 5.1) {
+    \textbf{Untrusted Input Ingress} (Prompts, Web Corpora, Documents, MCP Tools)
+};
+
+% =========================================================================
+% DEFENSE TIERS (Left: Core Control Substrate | Right: Intercepted Threats)
+% =========================================================================
+% Tier 1: Pre-Ingestion Hygiene
+\node[card_l1] (l1) at (-0.95, 4.0) {
+    \textbf{Tier 1: Pre-Ingress} ($\mathcal{K}_{\text{data}}$)\\
+    \scriptsize Canonicalize $\cdot$ Strip Macros\\
+    \scriptsize TrustTrace Provenance
+};
+\node[threat_badge] (t1) at (2.65, 4.0) {
+    \textbf{\textcolor{red!80!black}{[Interdicts]}}\\
+    $\times$ RAG poisoning\\
+    $\times$ Script macros\\
+    $\times$ Cross-tenant leaks
+};
+\draw[interdict_arrow] (l1.east) -- (t1.west);
+
+% Tier 2: Model Guardrails
+\node[card_l2] (l2) at (-0.95, 2.7) {
+    \textbf{Tier 2: Model Guardrails} ($\mathcal{K}_{\text{model}}$)\\
+    \scriptsize StruQ Typed Delimiters\\
+    \scriptsize SecAlign DPO $\cdot$ Sentinels
+};
+\node[threat_badge] (t2) at (2.65, 2.7) {
+    \textbf{\textcolor{red!80!black}{[Interdicts]}}\\
+    $\times$ Indirect injection\\
+    $\times$ Delimiter collision\\
+    $\times$ Multi-turn jailbreaks
+};
+\draw[interdict_arrow] (l2.east) -- (t2.west);
+
+% Tier 3: Planning & Policy Broker
+\node[card_l3] (l3) at (-0.95, 1.4) {
+    \textbf{Tier 3: Planning} ($\mathcal{K}_{\text{CBAC}}$)\\
+    \scriptsize Ephemeral Scoped Tokens\\
+    \scriptsize Plan Critic $\cdot$ Invariants
+};
+\node[threat_badge] (t3) at (2.65, 1.4) {
+    \textbf{\textcolor{red!80!black}{[Interdicts]}}\\
+    $\times$ Privilege pivoting\\
+    $\times$ Deceptive plans\\
+    $\times$ Invariant breaches
+};
+\draw[interdict_arrow] (l3.east) -- (t3.west);
+
+% Tier 4: Environment Sandboxing
+\node[card_l4] (l4) at (-0.95, 0.1) {
+    \textbf{Tier 4: OS Sandboxing} ($\mathcal{K}_{\text{sandbox}}$)\\
+    \scriptsize Micro-VM (gVisor/Kata)\\
+    \scriptsize Seccomp Filter $\cdot$ Deny Egress
+};
+\node[threat_badge] (t4) at (2.65, 0.1) {
+    \textbf{\textcolor{red!80!black}{[Interdicts]}}\\
+    $\times$ Host shell / RCE\\
+    $\times$ Namespace escapes\\
+    $\times$ Outbound C2 exfil
+};
+\draw[interdict_arrow] (l4.east) -- (t4.west);
+
+% Tier 5: Runtime Telemetry
+\node[card_l5] (l5) at (-0.95, -1.2) {
+    \textbf{Tier 5: Telemetry} ($\mathcal{K}_{\text{telemetry}}$)\\
+    \scriptsize OORAR Drift $\cdot$ WORM Log\\
+    \scriptsize Circuit Breaker \& Kill-Switch
+};
+\node[threat_badge] (t5) at (2.65, -1.2) {
+    \textbf{\textcolor{red!80!black}{[Interdicts]}}\\
+    $\times$ Denial-of-Cash loops\\
+    $\times$ Tool recursion\\
+    $\times$ Byzantine drift
+};
+\draw[interdict_arrow] (l5.east) -- (t5.west);
+
+% =========================================================================
+% INTER-LAYER PROGRESSION (Central Flow)
+% =========================================================================
+\draw[flow_arrow] ([xshift=-1.8cm]ingress_banner.south) -- (l1.north)
+    node[midway, right=1pt, font=\tiny] {Raw Ingress};
+\draw[flow_arrow] (l1.south) -- (l2.north)
+    node[midway, right=1pt, font=\tiny] {Canonical Text};
+\draw[flow_arrow] (l2.south) -- (l3.north)
+    node[midway, right=1pt, font=\tiny] {Aligned Context};
+\draw[flow_arrow] (l3.south) -- (l4.north)
+    node[midway, right=1pt, font=\tiny] {Scoped Action};
+\draw[flow_arrow] (l4.south) -- (l5.north)
+    node[midway, right=1pt, font=\tiny] {Audit Events};
+
+% =========================================================================
+% PERIMETER RAILS: Traversal (Left) & Feedback/Revocation (Right)
+% =========================================================================
+% Left Rail: Operational Traversal Flow
+\draw[flow_arrow, draw=blue!85!black, line width=1.1pt] 
+    ([xshift=-0.32cm]l1.north west) -- ([xshift=-0.32cm]l5.south west)
+    node[midway, sloped, above=2pt, font=\tiny\bfseries, text=blue!85!black] {Request Execution Flow};
+
+% Right Rail: Out-of-band Feedback & Dynamic Revocation
+\draw[feedback_arrow, line width=1.0pt] 
+    (t5.east) -- ++(0.85, 0) 
+    node[midway, below=1pt, font=\tiny\bfseries, text=purple!85!black] {Kill-Switch}
+    |- (t4.east)
+    node[pos=0.75, above=1pt, font=\tiny\bfseries, text=purple!85!black] {Kill};
+
+\draw[feedback_arrow, line width=1.0pt] 
+    ([xshift=0.85cm]t5.east |- t4.east) |- (t3.east)
+    node[pos=0.75, above=1pt, font=\tiny\bfseries, text=purple!85!black] {Revoke};
+
+\end{tikzpicture}}
+
+\caption{Multi-Layered Defense-in-Depth framework for Agentic AI across five operational tiers. Distinct container colors identify defense zones ($\mathcal{K}_{\text{data}}$ through $\mathcal{K}_{\text{telemetry}}$); red pill badges denote specific threat vectors intercepted at each security boundary; central solid arrows trace downward request traversal from raw ingress to execution; dashed purple loops depict the out-of-band telemetry feedback bus triggering dynamic capability token revocation and sandbox termination upon anomaly detection. By establishing decoupled, defense-in-depth enforcement across all five tiers, the architecture prevents single-point compromise from escalating to systemic control.}
+\label{fig:defense_layers}
+\end{figure}

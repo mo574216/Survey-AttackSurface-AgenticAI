@@ -1,0 +1,40 @@
+\section{Standards, Frameworks, and Regulatory Governance}
+\label{sec:standards}
+
+The transition of LLMs from experimental prototypes to mission-critical agentic deployments has prompted major cybersecurity standards bodies and regulatory agencies to establish governance frameworks~\cite{hasselwander2026agentic}. Harmonizing these frameworks with technical attack surfaces is essential for engineering compliant, defensible systems. Table~\ref{tab:standards_mapping} maps agentic attack surfaces across primary international security standards.
+
+\input{tables/tab_standards_mapping.tex}
+
+\subsection{OWASP Top 10 for LLM Applications (2025 Edition)}
+\label{subsec:owasp_mapping}
+
+The 2025 release of the OWASP Top 10 for LLM Applications~\cite{owasp2025top10, promptfoo2025owasp} explicitly reflects the risks introduced by agentic orchestration:
+\begin{itemize}
+    \item \textbf{LLM01: Prompt Injection:} Direct and indirect injections are recognized as the primary root-cause vulnerability enabling tool hijacking.
+    \item \textbf{LLM06: Excessive Agency:} Identified as the primary architectural flaw in agentic deployments, occurring when agents are granted excessive permissions, excessive autonomy, or unconstrained tool access without strict least-privilege scoping.
+    \item \textbf{LLM08: Vector and Embedding Weaknesses:} A dedicated entry addressing adversarial manipulation of embeddings, semantic cache poisoning, and access-control failures in vector retrieval.
+    \item \textbf{LLM10: Unbounded Consumption:} Addresses Denial of Cash (DoC) and resource exhaustion attacks where loops or high-frequency tool invocations overwhelm computational budgets.
+\end{itemize}
+
+\subsection{MITRE ATLAS Matrix Harmonization}
+\label{subsec:mitre_atlas}
+
+The MITRE Adversarial Threat Landscape for Artificial-Intelligence Systems (ATLAS)~\cite{mitre2026atlas} catalogs real-world adversary tactics, techniques, and procedures (TTPs). In agentic AI, ATLAS techniques map directly to multi-stage exploit pathways:
+\begin{itemize}
+    \item \textit{Initial Access \& Execution:} AML.T0051 (LLM Prompt Injection) and AML.T0053 (LLM Plugin / Tool Compromise).
+    \item \textit{Persistence:} AML.T0080.000 (LLM Conversation / Memory Hijacking) and AML.T0070 (Data Poisoning of Knowledge Retrieval Stores).
+    \item \textit{Lateral Movement:} AML.T0086 (Lateral Movement via API and Cloud Service Connectors).
+    \item \textit{Impact:} AML.T0034 (Compute and Resource Hijacking).
+\end{itemize}
+
+\subsection{NIST AI Risk Management Framework and International Regulation}
+\label{subsec:nist_eu_act}
+
+The National Institute of Standards and Technology (NIST) updated report on Adversarial Machine Learning (NIST AI 100-2e2025)~\cite{vassilev2025adversarial} formalizes trustworthiness dimensions across validity, reliability, safety, and security. For autonomous agents, NIST mandates strict isolation of untrusted data feeds, comprehensive provenance logging, and verifiable boundary controls.
+
+Concurrently, the European Union's \textit{Artificial Intelligence Act (EU AI Act)} establishes legally binding mandates for high-risk autonomous AI systems:
+\begin{itemize}
+    \item \textbf{Article 14 (Human Oversight):} Mandates that autonomous agents possess built-in operational stops, verifiable confirmation interfaces, and capabilities for human operators to override or halt execution without state corruption.
+    \item \textbf{Article 15 (Cybersecurity and Robustness):} Requires autonomous systems to demonstrate resilience against adversarial exploitation, including data poisoning, indirect prompt injection, and unauthorized lateral movement across enterprise networks.
+\end{itemize}
+Compliance with these mandates necessitates bridging high-level governance policies with the technical defense-in-depth mechanisms detailed in Section~\ref{sec:defenses}.

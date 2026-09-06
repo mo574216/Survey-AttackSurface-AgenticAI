@@ -1,0 +1,86 @@
+\section{Evaluation Metrics, Benchmarking Testbeds, and Empirical Analysis}
+\label{sec:benchmarks}
+
+Rigorous quantification of security postures in agentic systems requires standardized metrics capable of capturing non-deterministic decision trajectories, effector side-effects, and multi-step kill chains~\cite{picek2025security}.
+
+\subsection{Formal Security Metrics Formulation}
+\label{subsec:metrics_formulation}
+
+Let $\mathcal{S}$ denote a corpus of benchmark test scenarios, and let $\mathcal{A}$ represent the sequence of discrete actions executed by the agent. We formalize eight foundational security metrics:
+
+\subsubsection{Unsafe Action Rate (UAR)}
+The proportion of test scenarios that induce at least one policy-violating action is defined as
+\begin{equation}
+    \text{UAR} = \frac{1}{|\mathcal{S}|} \sum_{s \in \mathcal{S}} \mathbf{1}\{\text{violation}(s)\},
+\end{equation}
+where $\mathbf{1}\{\cdot\}$ is the indicator function. Variants of UAR can isolate specific fault modes, such as Tool-Misuse UAR or Exfiltration UAR. Lower values indicate superior security.
+
+\subsubsection{Policy Adherence Rate (PAR)}
+The proportion of executed actions that strictly satisfy developer-defined security policies is given by
+\begin{equation}
+    \text{PAR} = \frac{1}{|\mathcal{A}|} \sum_{a \in \mathcal{A}} \mathbf{1}\{\text{compliant}(a)\}.
+\end{equation}
+While in single-action adversarial tests PAR approximates $1 - \text{UAR}$, in complex multi-step trajectories PAR and UAR diverge, as an agent may execute multiple benign actions before a single fatal violation.
+
+\subsubsection{Privilege Escalation Distance (PED)}
+Defined over the causal threat graph $\mathcal{G}_{\text{threat}} = (\mathcal{V}, \mathcal{E})$, the privilege escalation distance satisfies
+\begin{equation}
+    \text{PED} = \min_{u \in \mathcal{V}_{\text{source}}, \, \pi \in \mathcal{V}_{\text{asset}}} \text{dist}_{\mathcal{G}}(u, \pi),
+\end{equation}
+where $\text{dist}_{\mathcal{G}}(u, \pi)$ is the shortest directed path length from an untrusted input node $u$ to a protected asset or privileged effector $\pi$. Higher PED signifies greater defense-in-depth barriers.
+
+\subsubsection{Time-to-Contain (TTC)}
+The duration from the initiation of an exploit $t_{\text{start}}$ to successful containment $t_{\text{contain}}$ is given by
+\begin{equation}
+    \text{TTC} = t_{\text{contain}} - t_{\text{start}}.
+\end{equation}
+TTC quantifies the latency of runtime anomaly detection and automated kill-switches.
+
+\subsubsection{Patch Half-Life (PHL)}
+Let $N(t)$ denote the number of production agent instances remaining vulnerable to a disclosed vulnerability at time $t$. The Patch Half-Life is defined as the minimum duration $\Delta t$ satisfying
+\begin{equation}
+    N(t_0 + \Delta t) = \frac{1}{2} N(t_0).
+\end{equation}
+Shorter PHL reflects superior organizational responsiveness across prompt, schema, and dependency patch cycles.
+
+\subsubsection{Retrieval Risk Score (RRS)}
+For a retrieved document bundle $\mathcal{B} = \{d_1, d_2, \dots, d_k\}$, let $r(d_i) \in [0, 1]$ denote the assessed risk of document $d_i$ based on provenance, presence of imperative keywords, and anomalous similarity. The aggregate retrieval risk is defined as
+\begin{equation}
+    \text{RRS}(\mathcal{B}) = \sum_{i=1}^k \alpha_i r(d_i), \quad \text{subject to} \quad \sum_{i=1}^k \alpha_i = 1,
+\end{equation}
+where $\alpha_i$ represents the model's reliance weight (e.g., attention allocation or citation rank). High RRS triggers human-in-the-loop escalation or effector disabling.
+
+\subsubsection{Out-of-Role Action Rate (OORAR)}
+Given an operational role contract $\mathcal{C}$ defining permissible tool verbs and arguments, the out-of-role action rate is
+\begin{equation}
+    \text{OORAR} = \frac{|\{a \in \mathcal{A} : \neg \text{allowed}_{\mathcal{C}}(a)\}|}{|\mathcal{A}|}.
+\end{equation}
+Spikes in OORAR signal model drift, prompt confusion, or active adversarial hijacking.
+
+\subsubsection{Cost-Exploit Susceptibility (CES)}
+The expected financial loss incurred under an adversarial policy $\pi_{\text{adv}}$ over a finite execution horizon $T$ is given by
+\begin{equation}
+    \text{CES}_T(\pi_{\text{adv}}) = \mathbb{E}_{\pi_{\text{adv}}} \left[ \sum_{t=1}^T c(a_t) \right],
+\end{equation}
+where $c(a_t)$ denotes the marginal financial cost (compute fees, third-party API billing, or serverless invocation costs) of action $a_t$.
+
+\subsection{Comparative Analysis of Empirical Benchmarks}
+\label{subsec:benchmark_landscape}
+
+Table~\ref{tab:benchmark_comparison} provides a comparative taxonomy of prominent empirical benchmarks developed to evaluate LLM agent security. 
+
+\input{tables/tab_benchmark_comparison.tex}
+
+Early benchmarks such as BIPIA~\cite{yi2025benchmarking} pioneered the systematic measurement of indirect prompt injection across diverse text formats; however, their evaluation was confined to static question-answering environments. In contrast, modern testbeds emphasize interactive tool execution. \textbf{AgentDojo}~\cite{debenedetti2024agentdojo} provides a realistic, dynamic environment featuring simulated email, web, and calendar services, exposing how indirect prompt injection causes agents to compromise user data. 
+
+In the software execution domain, \textbf{LLMSmith}~\cite{liu2024demystifying} evaluated 11 major open-source agent frameworks, uncovering 19 critical RCE vulnerabilities arising from unchecked tool parameter handling. For multi-agent systems, \textbf{Agent Smith}~\cite{gu2024agent} established the first rigorous benchmark for measuring the velocity and infection rate of self-replicating prompt worms across interconnected multimodal agents.
+
+\subsection{Evaluation Pitfalls and Testbed Rigor}
+\label{subsec:eval_pitfalls}
+
+Conducting reproducible security evaluations on agentic AI presents significant methodological pitfalls:
+\begin{itemize}
+    \item \textbf{Evaluator Leakage and LLM-as-a-Judge Bias:} Employing the model under test (or a model with shared pre-training weights) to evaluate trajectory safety introduces severe bias. Evaluation harnesses must employ deterministic, side-channel criteria, such as AST parsing of tool parameters, filesystem diff tracking, and network egress packet captures.
+    \item \textbf{Non-Determinism and State Carry-Over:} Because LLM decoding is stochastic, single-run evaluations yield high variance. Reliable evaluation requires multiple randomized trials with time-stratified sampling and strict between-trial state resets (flushing vector caches, resetting virtual filesystems, and clearing conversation memories)~\cite{dehghantanha2026sok}.
+    \item \textbf{Continuous Red-Teaming Integration:} Because foundation models, system prompts, and tool libraries undergo frequent updates, security benchmarks must be embedded directly within CI/CD pipelines with automated regression gates (e.g., failing builds if UAR increases by more than 2 percentage points).
+\end{itemize}

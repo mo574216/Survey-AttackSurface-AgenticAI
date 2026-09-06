@@ -1,0 +1,149 @@
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{\begin{tikzpicture}[
+    font=\sffamily\scriptsize,
+    >=Stealth,
+    tcb_node/.style={draw=blue!80!black, fill=blue!6, line width=1.1pt, rounded corners=3pt, align=center, inner sep=4pt},
+    untrusted_node/.style={draw=red!80!black, fill=red!5, line width=0.9pt, dashed, rounded corners=3pt, align=center, inner sep=4pt},
+    broker_node/.style={draw=orange!85!black, fill=orange!8, line width=1.1pt, rounded corners=3pt, align=center, inner sep=5pt},
+    sink_node/.style={draw=teal!80!black, fill=teal!6, line width=1.0pt, rounded corners=3pt, align=center, inner sep=4pt},
+    flow/.style={->, thick, draw=gray!75!black, shorten >= 2pt, shorten <= 2pt},
+    threat/.style={->, thick, draw=red!80!black, dashed, shorten >= 2pt, shorten <= 2pt}
+]
+
+% =========================================================================
+% TIER 1: Untrusted Ingress Surfaces (Y = 4.4 cm)
+% =========================================================================
+\node[untrusted_node, minimum width=3.3cm] (user) at (0, 4.4) {
+    \textbf{User Interface (AS1)}\\
+    \scriptsize Direct Prompts \& Tasks
+};
+
+\node[untrusted_node, minimum width=3.3cm] (docs) at (4.5, 4.4) {
+    \textbf{External Corpora (AS2)}\\
+    \scriptsize Web, RAG Docs \& Files
+};
+
+\node[untrusted_node, minimum width=3.3cm] (mcp_in) at (9.0, 4.4) {
+    \textbf{External MCP (AS3)}\\
+    \scriptsize Third-Party Tool Schemas
+};
+
+\node[untrusted_node, minimum width=3.3cm] (peer_in) at (13.5, 4.4) {
+    \textbf{Peer Agents (AS5)}\\
+    \scriptsize Inter-Agent RPC Messages
+};
+
+% =========================================================================
+% TIER 2: TCB Agent Cognition Substrate (Y = 2.5 cm)
+% =========================================================================
+\node[tcb_node, minimum width=3.0cm] (planner) at (0, 2.5) {
+    \textbf{Planner Core} ($\mathcal{P}$)\\
+    \scriptsize [ReAct, Reflexion, Tree-of-Thought]
+};
+
+\node[tcb_node, minimum width=3.3cm] (llm) at (4.5, 2.5) {
+    \textbf{Foundation Core} ($\mathcal{M}$)\\
+    \scriptsize [Weights, Context, KV-Cache]
+};
+
+\node[tcb_node, minimum width=3.0cm] (mem) at (9.0, 2.5) {
+    \textbf{Memory Store} ($\mathcal{S}$)\\
+    \scriptsize [Working, Vector DB, Episodic]
+};
+
+\node[tcb_node, minimum width=3.0cm] (vault) at (13.5, 2.5) {
+    \textbf{Secrets Vault} ($\mathcal{V}$)\\
+    \scriptsize [Ephemeral Keys, JIT Scopes]
+};
+
+% =========================================================================
+% TIER 3: TCB Security Mediation Substrate (Y = 0.9 cm)
+% =========================================================================
+\node[broker_node, minimum width=15.0cm] (broker) at (6.75, 0.9) {
+    \textbf{Security Broker \& Policy Substrate} ($\Omega$)\\
+    \scriptsize [CBAC Scopes, Schema Invariants, Rate/Spend Caps, Taint Tracking]
+};
+
+% =========================================================================
+% TIER 4: Target Execution Environments & Sinks (Y = -0.9 cm)
+% =========================================================================
+\node[untrusted_node, minimum width=3.3cm] (sandbox) at (0.5, -0.9) {
+    \textbf{Execution Sandbox} ($\mathcal{E}$)\\
+    \scriptsize [Micro-VM, Syscall Filters] (AS4)
+};
+
+\node[untrusted_node, minimum width=3.3cm] (tools) at (5.0, -0.9) {
+    \textbf{External APIs \& Cloud}\\
+    \scriptsize [OAuth Sinks, DB, Network] (AS6)
+};
+
+\node[untrusted_node, minimum width=3.3cm] (peer_bus) at (9.5, -0.9) {
+    \textbf{Swarm Mesh / Bus}\\
+    \scriptsize [Peer RPC Dispatch] (AS5)
+};
+
+\node[sink_node, minimum width=3.0cm] (audit) at (13.5, -0.9) {
+    \textbf{Audit Telemetry} ($\mathcal{T}$)\\
+    \scriptsize [Append-Only Logs, WORM] (AS10)
+};
+
+% =========================================================================
+% TCB Background Boundary
+% =========================================================================
+\begin{scope}[on background layer]
+    \node[draw=blue!70!black, line width=1.2pt, fill=blue!2, rounded corners=6pt, inner sep=10pt,
+          fit=(planner) (vault) (broker)] (tcb_box) {};
+    \node[draw=blue!40!black, fill=blue!8, rounded corners=2pt, font=\bfseries\tiny, text=blue!90!black, align=center, inner sep=2.5pt] 
+          at (2.25, 3.2) 
+          {Trusted Computing Base\\(TCB) Substrate};
+\end{scope}
+
+% =========================================================================
+% Authorized Flows (Gray solid lines with explicit anchors)
+% =========================================================================
+% Ingress to Cognition
+\draw[flow] (user.south) -- (planner.north) 
+    node[pos=0.35, right=2pt, font=\tiny] {user task};
+\draw[flow] (docs.south) -- (llm.north) 
+    node[pos=0.35, right=2pt, font=\tiny] {RAG context};
+\draw[flow] (mcp_in.south) -- (mem.north) 
+    node[pos=0.35, right=2pt, font=\tiny] {tool schema};
+\draw[flow] (peer_in.south) -- ++(0, -0.3) -| ([xshift=0.6cm]vault.east) |- (broker.east) 
+    node[pos=0.15, right=2pt, font=\tiny] {peer RPC};
+
+% Cognition Internal
+\draw[flow] (planner.east) -- (llm.west) 
+    node[midway, above, font=\tiny] {intent};
+\draw[flow] (llm.east) -- (mem.west) 
+    node[midway, above, font=\tiny] {query};
+\draw[flow] (llm.south) -- ([xshift=-2.25cm]broker.north) 
+    node[midway, right=2pt, font=\tiny] {action proposal};
+\draw[flow] (vault.south) -- ++(0, -0.35) -| ([xshift=3.75cm]broker.north) 
+    node[pos=0.25, above=1pt, font=\tiny] {JIT token};
+
+% Broker to Execution
+\draw[flow] ([xshift=-6.25cm]broker.south) -- (sandbox.north) 
+    node[midway, right=2pt, font=\tiny] {scoped exec};
+\draw[flow] ([xshift=-1.75cm]broker.south) -- (tools.north) 
+    node[midway, right=2pt, font=\tiny] {gated API};
+\draw[flow] ([xshift=2.75cm]broker.south) -- (peer_bus.north) 
+    node[midway, right=2pt, font=\tiny] {signed RPC};
+\draw[flow] ([xshift=6.75cm]broker.south) -- (audit.north) 
+    node[midway, right=2pt, font=\tiny] {audit trace};
+
+% =========================================================================
+% Threat Vectors (Red dashed lines with perimeter routing)
+% =========================================================================
+% Indirect prompt injection detour
+\draw[threat] ([xshift=0.7cm]docs.south) -- ++(0, -0.45) -| ([xshift=0.7cm]llm.north) 
+    node[pos=0.25, right=1pt, font=\tiny, text=red!80!black] {Indirect Injection};
+
+% Sandbox escape detour around left flank
+\draw[threat] (sandbox.west) -- ++(-0.6, 0) |- ([yshift=-2pt]broker.west) 
+    node[pos=0.25, left=1pt, font=\tiny, text=red!80!black] {Escape / RCE};
+
+\end{tikzpicture}}
+\caption{End-to-end architectural taxonomy and Trusted Computing Base (TCB) delineation for agentic AI systems. Thick blue borders and shaded substrate denote verified TCB components ($\mathcal{P}, \mathcal{M}, \mathcal{S}, \mathcal{V}, \Omega$); red dashed containers designate untrusted ingress surfaces (AS1, AS2, AS3, AS5) and execution targets (AS4, AS6). Solid gray arrows trace authenticated capability and data flows, while dashed red arrows depict adversarial indirect injection and sandbox privilege escalation. Interposing the security broker $\Omega$ enforces capability-based access control (CBAC) and schema invariants prior to all environment side effects.}
+\label{fig:reference_architecture}
+\end{figure}

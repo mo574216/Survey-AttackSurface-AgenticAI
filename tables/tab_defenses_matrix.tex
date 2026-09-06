@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Multi-Layered Defense-in-Depth Matrix for Agentic AI Systems Across the Operational Lifecycle.}
+\label{tab:defenses_matrix}
+\footnotesize
+\begin{tabularx}{\columnwidth}{l p{2.1cm} X X c p{1.8cm}}
+\toprule
+\textbf{Lifecycle Layer} & \textbf{Defensive Control} & \textbf{Mechanism \& Principles} & \textbf{Targeted Threats} & \textbf{Maturity} & \textbf{Trade-offs} \\
+\midrule
+\textbf{Pre-Ingestion (Data)} & Content Canonicalization & Strip active scripts, macros, and normalize HTML/PDF structures & Ingress exploits, hidden script triggers & High & Potential loss of layout metadata \\
+\textbf{Pre-Ingestion (Data)} & Provenance \& Source Tagging & Cryptographic signing of ingested corpora; trust-weighted retrieval & RAG corpus poisoning, untrusted injection & Medium & Verification overhead; key management \\
+\textbf{Inference (Model)} & Structured Queries (StruQ) & Strict structural separation of syntax from untrusted parameters & Indirect prompt injection, delimiter collision & High & Requires schema redesign \\
+\textbf{Inference (Model)} & Preference Alignment (SecAlign) & Direct Preference Optimization (DPO) on adversarial trajectories & Jailbreak drift, instruction following bypass & Medium & High training compute; potential over-refusal \\
+\textbf{Inference (Model)} & Dual-LLM Guardrail & Independent sentinel model inspecting I/O streams (Llama Guard) & Harmful content, prompt injection leakage & High & Added latency and token expense \\
+\textbf{Planning (Logic)} & Capability-Based Access (CBAC) & Granular least-privilege tool binding; per-task permission leases & Privilege escalation, unauthorized tool calls & High & Engineering complexity; strict policy specs \\
+\textbf{Planning (Logic)} & Formal Plan Contracts & Precondition and invariant checks via temporal logic & Plan hijacking, destructive multi-step sequences & Emerging & State explosion; planning latency \\
+\textbf{Environment (OS)} & Micro-VM Sandboxing & Ephemeral containerization (gVisor/Kata) with seccomp/eBPF filters & Remote Code Execution (RCE), sandbox escapes & High & Execution startup latency; resource overhead \\
+\textbf{Environment (OS)} & Strict Egress Filtering & Deny-all outbound network proxy; domain/IP allow-lists & Data exfiltration, SSRF, reverse shell connections & High & Operational friction for dynamic web agents \\
+\textbf{MAS Orchestration} & Signed Inter-Agent Bus & Asymmetric cryptographic message signing and Byzantine consensus & Agent impersonation, Sybil voting manipulation & Medium & Key infrastructure; consensus latency \\
+\textbf{Monitoring (Ops)} & Adaptive Kill-Switches & Anomaly detection on tool mix, API bursts, and OORAR thresholds & Denial of Cash (DoC), runaway loops, compromised agents & High & Risk of false-positive task termination \\
+\bottomrule
+\end{tabularx}
+\end{table}

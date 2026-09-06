@@ -1,0 +1,128 @@
+[
+  {
+    "key": "jin2019dseom",
+    "title": "DSEOM: A Framework for Dynamic Security Evaluation and Optimization of MTD in Container-based Cloud",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2019,
+    "doi": "10.1109/tdsc.2019.2916666"
+  },
+  {
+    "key": "iyer2007editorial",
+    "title": "Editorial: Dependability and Security",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2007,
+    "doi": "10.1109/tdsc.2007.070201"
+  },
+  {
+    "key": "gao2021a",
+    "title": "A Study on the Security Implications of Information Leakages in Container Clouds",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2021,
+    "doi": "10.1109/tdsc.2018.2879605"
+  },
+  {
+    "key": "hammar2026multiagent",
+    "title": "Multiagent LLM Systems for Security Operations",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2026,
+    "doi": "10.1109/msec.2026.3713252"
+  },
+  {
+    "key": "lee2026the",
+    "title": "The Reproduction Number of AI Worms: Epidemic Modeling of Adversarial Attacks in LLM Agent Ecosystems",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2026,
+    "doi": "10.1109/msec.2026.3713527"
+  },
+  {
+    "key": "oesch2026living",
+    "title": "Living Off the LLM:\n                    <b>How LLMs Will Change Adversary Tactics</b>",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2026,
+    "doi": "10.1109/msec.2026.3659035"
+  },
+  {
+    "key": "picek2025security",
+    "title": "Security and Privacy of Generative AI",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2025,
+    "doi": "10.1109/msec.2025.3600771"
+  },
+  {
+    "key": "schneier2023trustworthy",
+    "title": "Trustworthy AI Means Public AI [Last Word]",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2023,
+    "doi": "10.1109/msec.2023.3301262"
+  },
+  {
+    "key": "vassilev2026robust",
+    "title": "Robust AI Security and Alignment: A Sisyphean Endeavor?",
+    "journal": "IEEE Security &amp; Privacy",
+    "year": 2026,
+    "doi": "10.1109/msec.2026.3678214"
+  },
+  {
+    "key": "chen2026trusttrace",
+    "title": "TrustTrace: Provenance-Aware Tracing of Indirect Prompt Injection Propagation in LLM-Assisted Learning Workflows",
+    "journal": "IEEE Access",
+    "year": 2026,
+    "doi": "10.1109/access.2026.3726909"
+  },
+  {
+    "key": "vadlamani2026bsm",
+    "title": "BSM: A Browser-Resident Framework for Real-Time Detection of JavaScript API Abuse and Prompt Injection Attacks",
+    "journal": "IEEE Access",
+    "year": 2026,
+    "doi": "10.1109/access.2026.3712744"
+  },
+  {
+    "key": "nkoro2026rapid",
+    "title": "RAPID: A Resource-Aware Prompt Injection Defense for LLM-enabled Threat Detection",
+    "journal": "IEEE Internet of Things Journal",
+    "year": 2026,
+    "doi": "10.1109/jiot.2026.3717740"
+  },
+  {
+    "key": "m2022semantic",
+    "title": "Semantic Query-Featured Ensemble Learning Model for SQL-Injection Attack Detection in IoT-Ecosystems",
+    "journal": "IEEE Transactions on Reliability",
+    "year": 2022,
+    "doi": "10.1109/tr.2021.3124331"
+  },
+  {
+    "key": "sarferaz2025implementing",
+    "title": "Implementing Agentic AI Into ERP Software",
+    "journal": "IEEE Access",
+    "year": 2025,
+    "doi": "10.1109/access.2025.3621887"
+  },
+  {
+    "key": "singer2026autonomous",
+    "title": "Autonomous Adversaries Are Here: How Engineers Can Use Agentic Guardians to Protect AI Applications From Agentic Attackers",
+    "journal": "IEEE Micro",
+    "year": 2026,
+    "doi": "10.1109/mm.2026.3697950"
+  },
+  {
+    "key": "hasselwander2026agentic",
+    "title": "Agentic AI Arrives: How Gen Z Adopts Autonomous AI Agents",
+    "journal": "IEEE Access",
+    "year": 2026,
+    "doi": "10.1109/access.2026.3665348"
+  },
+  {
+    "key": "cruzes2026telemetry",
+    "title": "Telemetry and Agentic AI: Foundations for Optical Network Automation",
+    "journal": "IEEE Access",
+    "year": 2026,
+    "doi": "10.1109/access.2025.3649768"
+  },
+  {
+    "key": "khamis2025agentic",
+    "title": "Agentic AI Systems: Architecture and Evaluation Using a Frictionless Parking Scenario",
+    "journal": "IEEE Access",
+    "year": 2025,
+    "doi": "10.1109/access.2025.3590264"
+  }
+]

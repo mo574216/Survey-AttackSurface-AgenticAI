@@ -1,0 +1,32 @@
+\begin{table}[t]
+\centering
+\caption{Summary of Main Notations and Mathematical Symbols.}
+\label{tab:nomenclature}
+\footnotesize
+\begin{tabularx}{\columnwidth}{l X}
+\toprule
+\textbf{Notation} & \textbf{Formal Definition and Semantic Description} \\
+\midrule
+$\mathcal{A}$ & Autonomous agent tuple $\langle \mathcal{M}, \mathcal{P}, \mathcal{S}, \mathcal{T}, \mathcal{E}, \Omega \rangle$ \\
+$\mathcal{M}, \theta$ & Foundation model core and neural parameter weights \\
+$\mathcal{P}$ & Deliberative planning policy and decomposition engine \\
+$\mathcal{S}_{\text{work}}$ & Active working memory and conversational context window \\
+$\mathcal{S}_{\text{ep}}, \mathcal{S}_{\text{sem}}$ & Short-term episodic scratchpad and long-term semantic RAG store \\
+$\mathcal{T}, t_i$ & Tool registry and individual tool capability tuple \\
+$\mathcal{E}$ & External execution environment (OS, network, cloud, peers) \\
+$\Omega$ & Orchestration substrate, schema validator, and security broker \\
+$\mathcal{G}_{\text{threat}}$ & Causal threat graph $(\mathcal{V}, \mathcal{E}, \mathcal{K})$ modeling exploit progression \\
+$\mathcal{V}_{\text{source}}, \mathcal{V}_{\text{asset}}$ & Subsets of untrusted ingress sources and protected assets \\
+$\mathcal{K}(e)$ & Defensive security controls capable of severing transition edge $e$ \\
+$\mathcal{A}_{\text{adv}}$ & Six-tier adversary set $\{\mathcal{A}_{\text{ext}}, \mathcal{A}_{\text{cont}}, \mathcal{A}_{\text{tool}}, \mathcal{A}_{\text{peer}}, \mathcal{A}_{\text{sc}}, \mathcal{A}_{\text{ins}}\}$ \\
+$N(t), \beta, k$ & Infected agent count, transmission rate, and peer degree in MAS \\
+$\text{UAR}, \text{PAR}$ & Unsafe Action Rate and Policy Adherence Rate \\
+$\text{PED}$ & Privilege Escalation Distance (shortest path in $\mathcal{G}_{\text{threat}}$) \\
+$\text{TTC}, \text{PHL}$ & Time-to-Contain and Patch Half-Life \\
+$\text{RRS}(\mathcal{B})$ & Retrieval Risk Score over retrieved document bundle $\mathcal{B}$ \\
+$\text{OORAR}$ & Out-of-Role Action Rate under operational contract $\mathcal{C}$ \\
+$\text{CES}_T(\pi)$ & Cost-Exploit Susceptibility over execution horizon $T$ \\
+$\mathcal{I}(s), \delta(s, a)$ & Safety invariant predicate and predicted post-action state \\
+\bottomrule
+\end{tabularx}
+\end{table}

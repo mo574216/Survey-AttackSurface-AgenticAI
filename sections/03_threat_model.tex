@@ -1,0 +1,66 @@
+\section{Threat Modeling, Trust Boundaries, and the Causal Threat Graph}
+\label{sec:threat_model}
+
+Securing agentic AI requires establishing formal threat models that delineate the system's Trusted Computing Base (TCB), identify adversary capabilities, and map causal attack propagation routes.
+
+\subsection{Delineating the Trusted Computing Base (TCB)}
+\label{subsec:tcb}
+
+In classical security engineering, the TCB denotes the minimal set of hardware, firmware, and software elements whose correct enforcement is strictly required to uphold system security properties. In agentic architectures, defining the TCB is complicated by the non-deterministic, probabilistic nature of foundation models~\cite{dehghantanha2026sok, verma2024operationalizing}. 
+
+We classify the architectural components into trusted vs. untrusted perimeters:
+\begin{itemize}
+    \item \textbf{Inside the TCB (Core Security Substrate):}
+    \begin{enumerate}
+        \item \textit{Foundation Model Core ($\mathcal{M}$):} The base model weights and inherent safety alignment parameters, assumed free from upstream backdoors unless modeled under supply-chain compromise.
+        \item \textit{Security Broker and Policy Engine ($\Omega$):} The deterministic execution substrate responsible for strict JSON-schema validation, access policy enforcement, capability tokens, and rate limits.
+        \item \textit{Secrets Vault and Token Dispenser:} The isolated hardware or software credential store that issues ephemeral, scoped tokens to tool effectors without disclosing master keys to context memory.
+        \item \textit{Verified Memory and Storage Substrate:} The append-only, tamper-evident audit loggers, cryptographic hash stores, and access-controlled enterprise knowledge repositories.
+    \end{enumerate}
+    \item \textbf{Outside the TCB (Hostile and Untrusted Boundaries):}
+    \begin{enumerate}
+        \item \textit{User and Ingress Channels:} Direct prompts, chat interfaces, and webhook triggers.
+        \item \textit{External Knowledge Corpora:} Web pages, public document collections, forum scrapes, and third-party databases ingested during RAG operations.
+        \item \textit{Tool and Effector Endpoints:} External shell interpreters, container sandboxes, third-party MCP servers, and cloud service endpoints.
+        \item \textit{Inter-Agent Communication Buses:} Network channels and shared memory workspaces utilized by peer agents in distributed multi-agent topologies.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Formal Adversary Taxonomy}
+\label{subsec:adversary_classes}
+
+Expanding upon the foundational adversary classes introduced by Dehghantanha and Homayoun~\cite{dehghantanha2026sok} and threat modeling methodologies~\cite{verma2024operationalizing}, we formalize a six-tier adversary model $\mathcal{A}_{\text{adv}} = \{\mathcal{A}_{\text{ext}}, \mathcal{A}_{\text{cont}}, \mathcal{A}_{\text{tool}}, \mathcal{A}_{\text{peer}}, \mathcal{A}_{\text{sc}}, \mathcal{A}_{\text{ins}}\}$:
+
+\begin{enumerate}
+    \item \textbf{External Unprivileged Attacker ($\mathcal{A}_{\text{ext}}$):} Interacts with the agent through primary user interfaces without authenticated administrative rights. Capabilities include direct prompt injection, execution trigger manipulation~\cite{pasquini2024neural}, jailbreak crafting (e.g., multi-turn Crescendo attacks~\cite{russinovich2025great}), and adversarial queries designed to provoke policy drift or data extraction~\cite{abdali2024securing}.
+    \item \textbf{Malicious Content Provider ($\mathcal{A}_{\text{cont}}$):} Exerts indirect control over passive digital assets ingested by the agent (e.g., hosting attacker-controlled web pages, publishing trojaned PDFs, or modifying public code repositories). The attacker never directly interfaces with the agent; instead, malicious directives are ingested via web browsing, file parsing, or RAG indexing~\cite{greshake2023not, sutton2024indirect, zou2025poisonedrag}.
+    \item \textbf{Rogue Tool / MCP Provider ($\mathcal{A}_{\text{tool}}$):} Operates or compromises a third-party plugin, API service, or MCP server integrated into the agent's tool registry $\mathcal{T}$. The adversary can forge deceptive schema specifications, manipulate tool response payloads, trigger server-side request forgery (SSRF), or intentionally induce resource loops~\cite{liu2024demystifying}.
+    \item \textbf{Byzantine Peer Agent ($\mathcal{A}_{\text{peer}}$):} Possesses legitimate participant status within a decentralized or collaborative multi-agent network. The adversary injects malicious inter-agent messages, forges coordination telemetry, manipulates consensus voting, or propagates self-replicating adversarial instructions~\cite{dewitt2025open, gu2024agent, chen2024blockagents}.
+    \item \textbf{Supply-Chain Compromiser ($\mathcal{A}_{\text{sc}}$):} Targets upstream assets prior to deployment, such as poisoning open-source model checkpoints, corrupting embedding generators, implanting backdoors into foundational agent libraries (e.g., LangChain, AutoGen), or tampering with package dependency mirrors~\cite{helpnet2023genai, liu2024demystifying}.
+    \item \textbf{Insider / Compromised Administrator ($\mathcal{A}_{\text{ins}}$):} Holds authenticated credentials or developer access to system prompts, vector databases, or deployment infrastructure. Misconfigurations, credential leakage, or deliberate sabotage can bypass external perimeters entirely~\cite{vassilev2025adversarial}.
+\end{enumerate}
+
+\subsection{Assets and Security Properties}
+\label{subsec:assets_cia}
+
+The assets at risk in agentic systems span four foundational tiers:
+\begin{itemize}
+    \item \textbf{Data Confidentiality:} Proprietary system prompts, retrieved tenant documents, user session records, and embedded cryptographic credentials.
+    \item \textbf{Behavioral and Decision Integrity:} Ensuring the agent adheres strictly to developer-defined operational policies, executes valid tool invocations, and produces factually grounded outputs free from external manipulation.
+    \item \textbf{System and Financial Availability:} Protecting underlying compute infrastructure, preventing infinite execution loops, and avoiding ``Denial of Cash'' (DoC) attacks resulting from unbounded API calls or serverless resource exhaustion~\cite{owasp2025top10, promptfoo2025owasp}.
+    \item \textbf{Accountability and Forensics:} Preserving non-repudiation and tamper-evident audit trails across automated planning and effector traces.
+\end{itemize}
+
+\subsection{The Causal Threat Graph Formulation}
+\label{subsec:causal_graph}
+
+To mathematically analyze how initial attack footholds propagate into catastrophic system compromises, we formalize the system's risk structure as a \textit{Causal Threat Graph} $\mathcal{G}_{\text{threat}} = (\mathcal{V}, \mathcal{E}, \mathcal{K})$, defined as a directed multigraph where:
+\begin{itemize}
+    \item $\mathcal{V} = \mathcal{V}_{\text{source}} \cup \mathcal{V}_{\text{core}} \cup \mathcal{V}_{\text{effect}} \cup \mathcal{V}_{\text{asset}}$ represents the disjoint union of untrusted input sources, agent pipeline stages, effector sinks, and protected enterprise assets.
+    \item $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$ denotes directed causal transitions, where directed edge $e = (v_i, v_j) \in \mathcal{E}$ represents the capability of an exploit at component $v_i$ to directly influence or compromise state at $v_j$.
+    \item $\mathcal{K}: \mathcal{E} \to \mathcal{P}(\mathcal{D})$ maps each transition edge to the set of defensive security controls $\mathcal{D}$ (e.g., input sanitization, schema validation, isolated sandboxing, or egress filtering) capable of severing the causal link.
+\end{itemize}
+
+Formally, an end-to-end exploit constitutes a directed path $\pi = \langle v_0, v_1, \dots, v_m \rangle$ in $\mathcal{G}_{\text{threat}}$ such that $v_0 \in \mathcal{V}_{\text{source}}$ and $v_m \in \mathcal{V}_{\text{asset}}$. As illustrated in Fig.~\ref{fig:causal_threat_graph}, a system is provably resilient against exploit path $\pi$ if and only if there exists at least one edge $(v_i, v_{i+1}) \in \pi$ whose associated defensive controls $\mathcal{K}(v_i, v_{i+1})$ are actively and deterministically enforced.
+
+\input{figures/fig_causal_graph.tex}

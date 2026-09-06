@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Comprehensive Taxonomy of Attack Vectors, Surfaces, Preconditions, Paths, and Standards Mappings in Agentic AI Systems.}
+\label{tab:taxonomy_summary}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabularx}{\columnwidth}{>{\bfseries\raggedright\arraybackslash}p{1.9cm} >{\raggedright\arraybackslash}p{1.0cm} >{\raggedright\arraybackslash}X >{\centering\arraybackslash}p{0.8cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{1.1cm} >{\raggedright\arraybackslash}p{1.5cm}}
+\toprule
+\textbf{Attack Vector} & \textbf{Primary Goals} & \textbf{Preconditions} & \textbf{Paths} & \textbf{Impact \& Manifestation} & \textbf{OWASP 2025} & \textbf{MITRE ATLAS} \\
+\midrule
+\textbf{Direct Prompt / Jailbreak} & G1, G2, G3 & Direct user input interface & P1 & Policy bypass, system prompt leakage, harmful content generation & LLM01 & AML.T0051.000 \\
+\textbf{Indirect Prompt Injection} & G1, G2, G3, G6 & Access to ingestible text, web pages, PDFs, emails & P2, P3 & Autonomous execution of unintended tools, state hijacking & LLM01 & AML.T0051.001 \\
+\textbf{RAG Corpus Poisoning} & G1, G2, G6 & Write/edit access to indexed knowledge repositories & P4 & Silent data corruption, targeted misgrounding, delayed triggers & LLM04, LLM08 & AML.T0070 \\
+\textbf{Embedding Jamming / Perturbation} & G2, G4 & Corpus modification or adversarial perturbations & P4 & Denial of relevant retrieval (blocker docs), semantic hijacking & LLM04 & AML.T0070 \\
+\textbf{Tool Parameter Smuggling} & G3, G4, G5 & Unvalidated tool argument serialization & P1, P2, P3 & Remote Code Execution (RCE), command injection, SSRF & LLM05, LLM06 & AML.T0053 \\
+\textbf{Tool Shadowing / Squatting} & G1, G3, G6 & Unauthenticated plugin or MCP server registration & P3 & Interception of sensitive tool parameters, credential theft & LLM06, LLM07 & AML.T0053 \\
+\textbf{Memory / Reflection Corruption} & G1, G2, G6 & Writable episodic memory or unsanitized reflection loops & P3, P4 & Long-term goal deviation, persistent backdoors across sessions & LLM01, LLM04 & AML.T0080.000 \\
+\textbf{Cross-Tool Privilege Pivoting} & G1, G3, G5 & Multi-tool agent with heterogeneous permissions & P3 & Staged payload execution, lateral movement across APIs & LLM06 & AML.T0086 \\
+\textbf{Multi-Agent Byzantine Cascades} & G2, G6 & Open communication bus or unauthenticated peers & P5 & Cascading jailbreaks, voting corruption, swarm deadlock & LLM01, LLM06 & AML.T0051.001 \\
+\textbf{HITL Deceptive Exploitation} & G1, G3, G5 & Agent generates deceptive justification to human & P6 & Social engineering of operator, confirmation fatigue bypass & LLM06, LLM09 & AML.T0054 \\
+\textbf{Supply-Chain Dependency Poisoning} & G6, G7 & Compromised package repositories or checkpoints & P3, P4 & Upstream backdoor execution, persistent infrastructure control & LLM03 & AML.T0010 \\
+\bottomrule
+\end{tabularx}
+\end{table}

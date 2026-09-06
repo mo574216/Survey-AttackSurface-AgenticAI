@@ -1,0 +1,45 @@
+\section{Open Research Challenges and Strategic Roadmap}
+\label{sec:open_challenges}
+
+Despite rapid advancements in both attack demonstration and defensive engineering, securing agentic AI systems remains an open, interdisciplinary frontier. We articulate four fundamental research challenges that define the research agenda for the field:
+
+\subsection{Provably Safe Autonomous Planning and Verifiable Tool Synthesis}
+\label{subsec:provable_planning}
+
+Current guardrail architectures rely predominantly on heuristic filtering and post-hoc semantic inspection, which are vulnerable to adversarial evasion~\cite{chen2025struq}. A primary research objective is the development of \textit{provably safe execution kernels}. Under this paradigm, the foundation model operates strictly as an untrusted proposal engine, while a deterministic, formally verified micro-kernel translates proposals into machine-checkable program representations over typed resources. 
+
+Key theoretical and practical hurdles include:
+\begin{enumerate}
+    \item Managing state-space explosion during multi-step, long-horizon planning in open-world environments.
+    \item Reconciling probabilistic, ambiguous natural language goals with deterministic safety invariants (e.g., Linear Temporal Logic specifications).
+    \item Developing real-time counterexample generation that guides the model to safely replan upon policy rejection without stalling execution.
+\end{enumerate}
+
+\subsection{Resilient, Self-Healing Memory Architectures}
+\label{subsec:self_healing_memory}
+
+Long-term episodic and semantic memory subsystems represent persistent, durable attack surfaces~\cite{chen2024agentpoison}. Future architectures require principled memory sanitization capable of:
+\begin{enumerate}
+    \item \textit{Provenance-Rich Graph Memory:} Tagging every stored memory node with cryptographic origin metadata, confidence scores, and temporal decay parameters.
+    \item \textit{Latent Poisoning Detection (``Memory Antivirus''):} Periodically auditing memory stores to detect subtle, distributed semantic manipulations designed to trigger delayed backdoors.
+    \item \textit{Fine-Grained Rollback and Quarantine Semantics:} When an exploit is confirmed, the system must surgically excise contaminated memory nodes and recalculate dependent knowledge states without requiring full database resets.
+\end{enumerate}
+
+\subsection{Zero-Trust Multi-Agent Coordination and Decentralized Consensus}
+\label{subsec:zero_trust_mas}
+
+As multi-agent systems expand across enterprise workflows, natural-language communication channels must be replaced with hardened, zero-trust protocols:
+\begin{enumerate}
+    \item \textit{Cryptographic Identity and Non-Repudiation:} Binding every agent to a decentralized public-key identity (DID) to enforce mutual authentication, end-to-end payload encryption, and non-repudiation across inter-agent message buses.
+    \item \textit{Byzantine-Robust Semantic Consensus:} Designing consensus algorithms capable of filtering adversarial or compromised peer inputs in high-dimensional semantic spaces, extending traditional distributed systems principles to LLM deliberation~\cite{chen2024blockagents}.
+    \item \textit{Mitigating the Multi-Agent Security Tax:} Developing lightweight, low-overhead verification primitives that suppress prompt-worm epidemic propagation without inducing the severe (up to 35\%) utility degradation observed in current filtering approaches~\cite{peigne2025multi}.
+\end{enumerate}
+
+\subsection{Continuous AI-Augmented Red Teaming and Self-Evolving Defenses}
+\label{subsec:ai_red_teaming}
+
+Because frontier models evolve continuously, static evaluation suites rapidly become obsolete. The future of agent security lies in automated, closed-loop generator-evaluator frameworks:
+\begin{enumerate}
+    \item Autonomous red-team agents that continuously explore novel tool-misuse vectors, parameter smuggling patterns, and multi-turn jailbreak strategies.
+    \item Automated policy-synthesis engines that translate newly uncovered exploit traces into formal schema constraints, runtime invariants, and updated DPO preference pairs (e.g., evolving SecAlign~\cite{chen2025secalign} continuously in CI/CD).
+\end{enumerate}

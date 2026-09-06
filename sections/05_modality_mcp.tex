@@ -1,0 +1,38 @@
+\section{Frontier Attack Surfaces: Multimodal GUI Agents and the Model Context Protocol (MCP)}
+\label{sec:modality_mcp}
+
+As agentic AI expands beyond structured text APIs into multimodal operating system control and standardized tool protocols, novel systemic attack vectors emerge that challenge existing security boundaries.
+
+\subsection{Multimodal GUI and Computer-Use Agent Attack Surfaces}
+\label{subsec:gui_agents}
+
+The emergence of computer-use agents (e.g., Anthropic Claude Computer Use and systems evaluated on OSWorld~\cite{xie2024osworld}) enables foundation models to interact directly with desktop operating systems via display screenshots, virtual mouse movements, and keyboard keystrokes. This grounded interaction model introduces distinct physical and visual attack surfaces:
+
+\begin{enumerate}
+    \item \textbf{Visual Prompt Injection (VPI):} In contrast to plain-text injection, VPI exploits the visual perception pathways of Vision-Language Models (VLMs). Adversaries can embed typographic instructions into rendered web pages, desktop wallpapers, or document images (e.g., micro-fonts, low-contrast text, or steganographic perturbations)~\cite{gu2024agent}. When the agent captures the screen to determine the next UI action, the visual encoder parses the malicious text, steering the agent to click malicious links or execute arbitrary shell commands. Recent browser-resident detection frameworks (e.g., BSM~\cite{vadlamani2026bsm}) attempt to intercept such DOM manipulations and API abuse before rendering.
+    \item \textbf{UI Redressing and Visual Clickjacking:} Malicious websites or applications can render transparent overlays, fake system dialogs, or deceptive confirmation buttons designed to mislead the agent's spatial grounding algorithms. An agent intending to click a ``Cancel'' button may be visually induced to click an underlying ``Grant Full Disk Access'' prompt.
+    \item \textbf{Operating System State Poisoning:} Unrestricted computer-use agents read system logs, browser histories, and local configuration files. An attacker placing malicious directives in a local terminal buffer or system error log can achieve delayed compromise whenever the agent inspects system state for troubleshooting.
+\end{enumerate}
+
+\subsection{Security Analysis of the Model Context Protocol (MCP)}
+\label{subsec:mcp_security}
+
+The Model Context Protocol (MCP) has emerged as an open standard for connecting LLM applications to external data sources and tools~\cite{hou2026mcp}. MCP establishes a client-host-server topology communicating via JSON-RPC 2.0 over standard input/output (\texttt{stdio}) or Server-Sent Events (SSE) with HTTP POST. While MCP provides modularity, its operational mechanics introduce protocol-level vulnerabilities:
+
+\input{figures/fig_mcp_architecture.tex}
+
+\begin{itemize}
+    \item \textbf{Tool Schema Poisoning and Tool Shadowing:} MCP servers register their available tools dynamically during the initial protocol handshake (\texttt{tools/list}). A malicious or compromised MCP server can emit deceptive tool descriptions designed to hijack model routing. For instance, an untrusted server can register a tool named \texttt{read\_document} with descriptions claiming superior performance over native tools, causing the LLM to route confidential document requests to the rogue server.
+    \item \textbf{Resource URI Path Traversal and IDOR:} MCP \textit{Resources} allow servers to expose local files, databases, or API responses via URI schemes (e.g., \texttt{file:///}, \texttt{postgres://}). If an MCP server fails to strictly sanitize incoming resource requests, an indirect prompt injection attack can compel the client to request \texttt{file:///etc/passwd} or \texttt{file:///C:/Windows/win.ini}, exfiltrating sensitive host state.
+    \item \textbf{Prompt Template Injection:} MCP servers can distribute pre-packaged \textit{Prompts} (\texttt{prompts/get}) that include predefined context and instructions. An adversarial prompt provider can inject hidden jailbreak triggers or backdoors into these templates, corrupting any agent session that invokes the pre-packaged workflow.
+    \item \textbf{Host-Level Granularity Gaps and Approval Fatigue:} Current MCP host implementations typically enforce tool approval at the coarse server level or tool-name level rather than conducting deep parameter inspection. Once a user approves a tool (e.g., \texttt{execute\_query}), the model can invoke it repeatedly with arbitrary, potentially destructive SQL payloads without further user intervention.
+\end{itemize}
+
+\subsection{Cyber-Physical and Embodied Agent Vulnerabilities}
+\label{subsec:embodied_agents}
+
+When agentic AI is integrated into robotics, industrial IoT, or smart facility management, decision errors transcend the digital domain:
+\begin{itemize}
+    \item \textbf{Actuator Overdrive and Physical Safety Violations:} Unbounded planning loops or compromised action parameters can drive robotic arms beyond joint velocity limits, disable heating/ventilation interlocks, or open electronic access gates without physical authorization~\cite{narajala2025securing}.
+    \item \textbf{Sensory Deception:} Environmental tampering (e.g., spoofed sensor telemetry or deceptive visual QR codes) can manipulate the agent's real-world world-model, inducing unsafe navigation or manipulation routines.
+\end{itemize}

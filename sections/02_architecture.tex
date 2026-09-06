@@ -1,0 +1,59 @@
+\section{Agentic AI Reference Architecture and Operational Lifecycle}
+\label{sec:architecture}
+
+To establish a rigorous foundation for vulnerability analysis, we formalize the structural components, execution pipelines, and operational paradigms that characterize modern Agentic AI systems.
+
+\subsection{Formal System Model}
+\label{subsec:formal_system_model}
+
+We formalize an autonomous agentic system as a sextuple
+\begin{equation}
+    \mathcal{A} = \langle \mathcal{M}, \mathcal{P}, \mathcal{S}, \mathcal{T}, \mathcal{E}, \Omega \rangle,
+\end{equation}
+where $\mathcal{M}$ denotes the core foundation model (e.g., an autoregressive Large Language Model or Vision-Language Model) parameterized by pre-trained weights $\theta$, responsible for semantic parsing, natural language generation, and zero-shot reasoning. Table~\ref{tab:nomenclature} details the mathematical symbols and operational nomenclature adopted throughout this paper.
+
+\input{tables/tab_nomenclature.tex}
+\input{figures/fig_architecture.tex}
+
+The formal constituents of tuple $\mathcal{A}$ are structured as follows:
+\begin{itemize}
+    \item $\mathcal{P}$ represents the deliberative planning engine governing decomposition, tool selection heuristics, and policy execution (e.g., ReAct, Reflexion, Tree-of-Thoughts, or static workflow state machines).
+    \item $\mathcal{S} = \langle \mathcal{S}_{\text{work}}, \mathcal{S}_{\text{ep}}, \mathcal{S}_{\text{sem}} \rangle$ designates the hierarchical memory architecture, comprising active working context ($\mathcal{S}_{\text{work}}$), short-term episodic scratchpads ($\mathcal{S}_{\text{ep}}$), and long-term semantic knowledge bases ($\mathcal{S}_{\text{sem}}$) indexed via vector embeddings.
+    \item $\mathcal{T} = \{t_1, t_2, \dots, t_n\}$ denotes the tool registry, where each tool $t_i = \langle \text{ID}_i, \text{Schema}_i, \text{Perm}_i, \text{Endpoint}_i \rangle$ defines a concrete external capability (e.g., code interpreter, filesystem access, web client, or cloud API) governed by typed input/output schemas.
+    \item $\mathcal{E}$ represents the external execution environment, encompassing local operating system primitives, enterprise database instances, network perimeters, and peer agent endpoints deployed across real-world enterprise architectures~\cite{sarferaz2025implementing, cruzes2026telemetry, khamis2025agentic}.
+    \item $\Omega$ defines the orchestration and security enforcement substrate, comprising prompt templates, schema validators, capability brokers, audit loggers, and human-in-the-loop (HITL) authorization gates.
+\end{itemize}
+
+\subsection{The Perception-Cognition-Action-Reflection Lifecycle}
+\label{subsec:lifecycle}
+
+The core operational cycle of an agent unfolds across five discrete phases, iterated until a terminal objective is satisfied, a computation budget is exhausted, or a policy violation triggers an abort:
+\begin{enumerate}
+    \item \textbf{Ingestion and Perception:} The agent ingests user intent $u \in \mathcal{U}$ alongside retrieved context $c_{\text{ret}} \sim \mathcal{S}_{\text{sem}}$ and sensory telemetry (e.g., DOM trees, terminal output, or GUI screenshots).
+    \item \textbf{Deliberative Cognition and Planning:} Conditioned on memory state $\mathcal{S}$ and system policies, the planner $\mathcal{P}$ generates an intermediate chain-of-thought rationale $\tau_t$ and synthesizes a candidate action $a_t \in \mathcal{T} \cup \{\text{TERMINATE}\}$.
+    \item \textbf{Brokering and Validation:} The security broker $\Omega$ intercepts candidate action $a_t = \langle t_k, \mathbf{x}_k \rangle$, validating parameter bundle $\mathbf{x}_k$ against schema $\text{Schema}_k$ and verifying execution permissions $\text{Perm}_k$.
+    \item \textbf{Environment Execution:} Upon clearance, the tool endpoint $\text{Endpoint}_k$ executes action $a_t$ within environment $\mathcal{E}$, yielding raw observation $o_t \in \mathcal{O}$.
+    \item \textbf{State Update and Reflection:} The observation $o_t$ is parsed, evaluated against safety criteria, and appended to working memory $\mathcal{S}_{\text{work}}$, triggering potential self-correction or long-term memory consolidation in $\mathcal{S}_{\text{sem}}$.
+\end{enumerate}
+
+\subsection{Architectural Paradigms and Coordination Topologies}
+\label{subsec:topologies}
+
+Modern agentic deployments exhibit diverse coordination topologies that shape the perimeter and propagation dynamics of security threats:
+\begin{itemize}
+    \item \textbf{Autonomous Single-Agent Systems:} A monolithic agent executes end-to-end task loops via dedicated tool interfaces. While structurally straightforward, single-agent architectures exhibit high vulnerability to linear kill-chain progression, as the compromise of the central model directly yields full effector privileges~\cite{dehghantanha2026sok, liu2024demystifying}.
+    \item \textbf{Hierarchical Orchestrator-Worker Networks:} A centralized orchestrator decomposes high-level goals and delegates sub-tasks to specialized worker agents possessing isolated tool subsets. Security vulnerabilities in this paradigm center on delegation abuse, privilege escalation via sub-agent prompt spoofing, and orchestrator hijacking~\cite{narajala2025securing}.
+    \item \textbf{Decentralized Swarms and Consensus Meshes:} Autonomous agents interact peer-to-peer over a shared communication bus or blackboard architecture without a single coordinator. Consensus mechanisms (e.g., majority voting, iterative debate, or token-weighted aggregation) are employed to align decisions. Open communication buses introduce susceptibility to Byzantine corruption and prompt-based epidemic spreading~\cite{dewitt2025open, gu2024agent, chen2024blockagents}.
+    \item \textbf{Grounded GUI and Computer-Use Agents:} Multimodal architectures interact directly with desktop and operating system interfaces via mouse clicks, keystrokes, and screenshot parsing. These agents bridge semantic understanding with native OS execution, expanding the attack surface beyond constrained API boundaries~\cite{xie2024osworld}.
+\end{itemize}
+
+\subsection{Standardization Protocols: The Model Context Protocol (MCP)}
+\label{subsec:mcp_arch}
+
+A foundational architectural advancement in modern agentic ecosystems is the standardization of client-host-server tool protocols, most prominently Anthropic's \textit{Model Context Protocol} (MCP)~\cite{hou2026mcp}. MCP decomposes agent integration into three distinct architectural tiers:
+\begin{enumerate}
+    \item \textbf{MCP Host:} The host application (e.g., an IDE, desktop assistant, or workflow runner) that manages model execution, user authorization, and agent lifecycles.
+    \item \textbf{MCP Client:} The intermediary adapter embedded within the host that negotiates connections, maintains session state, and translates LLM tool requests into protocol calls.
+    \item \textbf{MCP Server:} Independent, standalone lightweight services exposing distinct capabilities categorized into: (i)~\textit{Resources} (file and database contexts), (ii)~\textit{Prompts} (pre-packaged workflow templates), and (iii)~\textit{Tools} (executable functions with side effects).
+\end{enumerate}
+While MCP establishes clean decoupling between foundational models and external capability providers, this client-host-server separation creates protocol-level boundaries that, if left unhardened, introduce severe serialization, impersonation, and tool-shadowing vulnerabilities, as analyzed in Section~\ref{sec:modality_mcp}.

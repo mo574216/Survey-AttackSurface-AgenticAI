@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{Systematic Comparison of Contemporary Empirical Security Benchmarks and Testbeds for Agentic AI.}
+\label{tab:benchmark_comparison}
+\footnotesize
+\begin{tabularx}{\columnwidth}{l p{2.1cm} p{2.4cm} X X c}
+\toprule
+\textbf{Benchmark} & \textbf{Target System} & \textbf{Evaluation Environment} & \textbf{Threat Vectors Evaluated} & \textbf{Primary Metrics} & \textbf{Year / Venue} \\
+\midrule
+\textbf{AgentDojo}~\cite{debenedetti2024agentdojo} & Autonomous Tool Agents & Dynamic simulated web, email, calendar suite & Indirect prompt injection, goal hijacking & Attack Success Rate (ASR), Task Utility & 2024 / NeurIPS \\
+\textbf{LLMSmith}~\cite{liu2024demystifying} & LLM Frameworks (LangChain, AutoGPT) & Native OS execution & Remote Code Execution (RCE), command injection & Vulnerability count, Exploit rate & 2024 / ACM CCS \\
+\textbf{BIPIA}~\cite{yi2025benchmarking} & QA \& Retrieval LLMs & Static web, email, and document corpora & Indirect prompt injection across diverse formats & ASR, Refusal Rate & 2025 / ACM KDD \\
+\textbf{Agent Smith}~\cite{gu2024agent} & Multimodal LLM Swarms & Multi-agent chat network & Self-replicating prompt worms, swarm infection & Infection rate, Propagation velocity & 2024 / ICML \\
+\textbf{PoisonedRAG}~\cite{zou2025poisonedrag} & RAG Systems & Vector DBs (Dense \& Sparse retrievers) & Knowledge base poisoning, targeted corruption & Targeted Misinformation Rate & 2025 / USENIX Sec \\
+\textbf{Blocker RAG}~\cite{shafran2025machine} & Dense Retrieval RAG & Enterprise documentation corpora & Denial of retrieval, blocker document jamming & Top-$k$ Jamming Rate, Utility Drop & 2025 / USENIX Sec \\
+\textbf{AgentPoison}~\cite{chen2024agentpoison} & Long-term Memory Agents & Vector databases \& episodic memory stores & Memory poisoning, backdoor triggers & Backdoor ASR, Task Accuracy & 2024 / NeurIPS \\
+\textbf{InjecAgent}~\cite{zhan2024injecagent} & ReAct Tool Agents & Synthetic tool environments & Tool parameter hijacking, data exfiltration & ReAct Step Hijack Rate & 2024 / ACL Findings \\
+\textbf{ToolEmu}~\cite{ruan2023identifying} & Function Calling Agents & LM-emulated tool execution sandbox & Unintended real-world tool side-effects & Severe Hazard Rate & 2024 / ICLR \\
+\bottomrule
+\end{tabularx}
+\end{table}

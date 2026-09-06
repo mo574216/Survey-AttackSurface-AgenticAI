@@ -1,0 +1,107 @@
+[
+  {
+    "key": "barker2012access",
+    "title": "Access Control with Privacy Enhancements: A Unified Approach",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2012,
+    "doi": "10.1109/tdsc.2012.22"
+  },
+  {
+    "key": "colombo2017enhancing",
+    "title": "Enhancing MongoDB with Purpose-Based Access Control",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2017,
+    "doi": "10.1109/tdsc.2015.2497680"
+  },
+  {
+    "key": "shebaro2015contextbased",
+    "title": "Context-Based Access Control Systems for Mobile Devices",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2015,
+    "doi": "10.1109/tdsc.2014.2320731"
+  },
+  {
+    "key": "narouei2018automatic",
+    "title": "Automatic Extraction of Access Control Policies from Natural Language Documents",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2018,
+    "doi": "10.1109/tdsc.2018.2818708"
+  },
+  {
+    "key": "xu2012dataprovenance",
+    "title": "Data-Provenance Verification For Secure Hosts",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2012,
+    "doi": "10.1109/tdsc.2011.50"
+  },
+  {
+    "key": "sun2016a",
+    "title": "A Provenance-Aware Access Control Framework with Typed Provenance",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2016,
+    "doi": "10.1109/tdsc.2015.2410793"
+  },
+  {
+    "key": "sultana2015a",
+    "title": "A Lightweight Secure Scheme for Detecting Provenance Forgery and Packet DropAttacks in Wireless Sensor Networks",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2015,
+    "doi": "10.1109/tdsc.2013.44"
+  },
+  {
+    "key": "salamat2011runtime",
+    "title": "Runtime Defense against Code Injection Attacks Using Replicated Execution",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2011,
+    "doi": "10.1109/tdsc.2011.18"
+  },
+  {
+    "key": "bower2005autonomic",
+    "title": "Autonomic Microprocessor Execution via Self-Repairing Arrays",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2005,
+    "doi": "10.1109/tdsc.2005.44"
+  },
+  {
+    "key": "kirkpatrick2012resilient",
+    "title": "Resilient Authenticated Execution of Critical Applications in Untrusted Environments",
+    "journal": "IEEE Transactions on Dependable and Secure Computing",
+    "year": 2012,
+    "doi": "10.1109/tdsc.2012.25"
+  },
+  {
+    "key": "liang2026perspectiveinvariant",
+    "title": "Perspective-Invariant Attack With Enhanced Transferability of Adversarial Examples",
+    "journal": "IEEE Transactions on Information Forensics and Security",
+    "year": 2026,
+    "doi": "10.1109/tifs.2026.3714109"
+  },
+  {
+    "key": "zhang2026dgaa",
+    "title": "3DGAA: Realistic and Robust 3D Gaussian-based Adversarial Attack for Autonomous Driving",
+    "journal": "IEEE Transactions on Information Forensics and Security",
+    "year": 2026,
+    "doi": "10.1109/tifs.2026.3729511"
+  },
+  {
+    "key": "ke2024frequencyselective",
+    "title": "Frequency-Selective Adversarial Attack Against Deep Learning-Based Wireless Signal Classifiers",
+    "journal": "IEEE Transactions on Information Forensics and Security",
+    "year": 2024,
+    "doi": "10.1109/tifs.2024.3352423"
+  },
+  {
+    "key": "wang2024progen",
+    "title": "ProGen: Projection-Based Adversarial Attack Generation Against Network Intrusion Detection",
+    "journal": "IEEE Transactions on Information Forensics and Security",
+    "year": 2024,
+    "doi": "10.1109/tifs.2024.3402155"
+  },
+  {
+    "key": "truong2026a",
+    "title": "A Dual-Purpose Framework for Backdoor Defense and Backdoor Amplification in Diffusion Models",
+    "journal": "IEEE Transactions on Information Forensics and Security",
+    "year": 2026,
+    "doi": "10.1109/tifs.2026.3675424"
+  }
+]

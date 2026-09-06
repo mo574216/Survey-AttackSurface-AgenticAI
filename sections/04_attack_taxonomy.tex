@@ -1,0 +1,73 @@
+\section{Comprehensive Taxonomy of Attack Vectors and Multi-Step Kill Chains}
+\label{sec:attack_taxonomy}
+
+To systematically dissect how adversaries exploit agentic AI, we establish a multi-dimensional taxonomy categorizing attack objectives, pipeline vectors, and multi-stage exploit pathways. Table~\ref{tab:taxonomy_summary} synthesizes these vectors alongside their operational preconditions, path mappings, and standardizations.
+
+\input{tables/tab_taxonomy_summary.tex}
+
+\subsection{Categorization of Attacker Objectives}
+\label{subsec:goals}
+
+Attacker motivations in agentic environments extend beyond conversational misuse into external computational and operational infrastructure. We structure attacker goals into \textit{Enablers} (which expand operational capabilities) and \textit{Terminal Outcomes} (which realize concrete damage):
+\begin{itemize}
+    \item \textbf{Enablers:}
+    \begin{itemize}
+        \item \textit{G3: Privilege Escalation / Unauthorized Invocation:} Upgrading an unprivileged natural language prompt into operating system commands, cloud administrative API calls, or restricted internal tool execution~\cite{dehghantanha2026sok, liu2024demystifying}.
+        \item \textit{G6: Persistence and Backdoor Implantation:} Infiltrating long-term vector stores, conversation memory, or configuration prompts to maintain durable control across subsequent sessions~\cite{chen2024agentpoison, truong2026a}.
+        \item \textit{G7: Upstream Supply-Chain Compromise:} Subverting foundational models, third-party libraries, or tool packages before agent deployment~\cite{helpnet2023genai}.
+    \end{itemize}
+    \item \textbf{Terminal Outcomes:}
+    \begin{itemize}
+        \item \textit{G1: Data Exfiltration and Privacy Leakage:} Extracting enterprise databases, proprietary system prompts, or user credentials via out-of-band network channels, DNS tunneling, or disguised tool outputs~\cite{greshake2023not}.
+        \item \textit{G2: Integrity Subversion and Decision Biasing:} Forcing the agent to deviate from true user intent, generating fraudulent summaries, or manipulating automated decision workflows~\cite{an2025rag}.
+        \item \textit{G4: Resource Abuse and Denial of Service / Cash (DoS/DoC):} Inducing infinite execution loops, pathological recursion, or redundant high-cost API calls to exhaust computational quotas and incur financial penalties~\cite{owasp2025top10, promptfoo2025owasp}.
+        \item \textit{G5: Financial Fraud and Physical Harm:} Executing unauthorized monetary transfers, placing fraudulent commercial orders, or misconfiguring cyber-physical actuators~\cite{narajala2025securing, zhang2026dgaa}.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Granular Attack Vectors Across Pipeline Stages}
+\label{subsec:pipeline_vectors}
+
+\subsubsection{Perception and Context Ingress}
+Adversaries exploit the absence of formal separation between instructional metadata and semantic payload:
+\begin{itemize}
+    \item \textit{Direct Prompt Injections and Multi-Turn Jailbreaks:} Direct inputs crafted to override core safety policies. Recent multi-turn techniques, such as the Crescendo attack~\cite{russinovich2025great}, exploit conversational momentum to guide models into unsafe policy spaces without triggering single-turn semantic filters. In parallel, adversarial perturbations exploit transferability across model boundaries~\cite{liang2026perspectiveinvariant, ke2024frequencyselective, wang2024progen}.
+    \item \textit{Indirect Prompt Injection (IPI):} Adversarial directives embedded within untrusted external artifacts (e.g., HTML web pages, PDF documents, and incoming emails)~\cite{greshake2023not, sutton2024indirect}. When the agent retrieves and ingests these artifacts, the model conflates untrusted data with operator instructions, autonomously executing unintended effector commands.
+    \item \textit{Delimiter Collision and Context Stuffing:} Injecting syntax-matching delimiter tokens (e.g., \texttt{```json}, \texttt{<system>}, or XML boundaries) to prematurely close data encapsulation blocks and execute injected commands.
+\end{itemize}
+
+\subsubsection{Retrieval-Augmented Generation (RAG) and Embeddings}
+External knowledge retrieval introduces distinct vector-space vulnerabilities:
+\begin{itemize}
+    \item \textit{Targeted Corpus Poisoning:} As demonstrated in PoisonedRAG~\cite{zou2025poisonedrag}, an attacker inserts a minimal number of adversarial documents into the indexing corpus. When benign user queries trigger vector retrieval, the poisoned documents are ranked into top-$k$ context, corrupting the generation output~\cite{an2025rag}.
+    \item \textit{Retrieval Jamming with Blocker Documents:} Shafran~\textit{et al.}~\cite{shafran2025machine} demonstrated that attackers can inject crafted ``blocker documents'' that achieve artificially high cosine similarity across broad semantic query spaces, crowding out legitimate knowledge and denying relevant retrieval (Denial of Retrieval).
+    \item \textit{Insecure Direct Object Reference (IDOR) in Vector Retrieval:} In multi-tenant vector databases lacking granular, document-level access-control lists (ACLs), user queries can inadvertently retrieve embeddings belonging to other tenants, enabling cross-tenant data leakage.
+\end{itemize}
+
+\subsubsection{Memory and Reflection Subsystems}
+Agentic persistence mechanisms create durable targets:
+\begin{itemize}
+    \item \textit{Episodic Memory Poisoning:} Adversaries induce agents to store malicious summaries or poisoned factual associations in long-term memory (e.g., via AgentPoison~\cite{chen2024agentpoison}), establishing persistent backdoors that trigger on specific keywords weeks after initial exposure~\cite{truong2026a}.
+    \item \textit{Reflection and Self-Correction Hijacking:} When agents utilize iterative self-reflection (Reflexion) to critique prior outputs, adversarial observations can mislead the reflection module into false corrections, reversing valid security assertions.
+\end{itemize}
+
+\subsubsection{Tool Execution and Environment Interaction}
+The interface between probabilistic reasoning and deterministic OS execution represents a primary attack surface:
+\begin{itemize}
+    \item \textit{Parameter Smuggling and Type Confusion:} Attackers exploit weak schema validation to inject unexpected arguments (e.g., newline injection in shell commands, SQL fragments in database queries, or path traversal tokens in file tools)~\cite{liu2024demystifying}, mirroring classical code and query injection patterns~\cite{m2022semantic, oesch2026living}.
+    \item \textit{Tool Shadowing and Squatting:} In dynamic environments supporting run-time tool discovery, an attacker registers a malicious tool with semantic descriptions nearly identical to a legitimate tool (e.g., naming a rogue tool \texttt{fetch\_secure\_url}), tricking the planner into routing sensitive data through the rogue endpoint.
+    \item \textit{Excessive Agency and Sandbox Escapes:} Insecure container configurations, permissive filesystem mounts, and unrestricted outbound network access allow injected commands to break out of temporary workspaces and compromise host operating systems~\cite{liu2024demystifying}.
+\end{itemize}
+
+\subsection{Formal Multi-Step Exploit Pathways (Kill Chains)}
+\label{subsec:kill_chains}
+
+Real-world exploits rarely execute as isolated events; rather, attackers compose multi-step kill chains that traverse trust boundaries:
+\begin{itemize}
+    \item \textbf{P1: Direct Prompt $\to$ Immediate Tool Misuse:} The adversary issues a crafted jailbreak directly commanding the agent to invoke a privileged tool (e.g., executing a reverse shell), achieving immediate privilege escalation (G3).
+    \item \textbf{P2: Indirect Ingress $\to$ Context $\to$ Effector Hijack:} A victim user tasks an autonomous assistant with summarizing a public URL. The URL contains hidden IPI directives instructing the agent to search local files for \texttt{id\_rsa} and transmit it via HTTP GET to an attacker-controlled endpoint (G1)~\cite{greshake2023not, sutton2024indirect}.
+    \item \textbf{P3: Cross-Tool Privilege Pivoting:} The attacker abuses an unprivileged tool (e.g., a code interpreter) to stage a malicious file on disk, then induces a secondary tool (e.g., a report generator or email client) to read and dispatch the payload, pivoting across permission domains.
+    \item \textbf{P4: Knowledge Poisoning $\to$ Latent Retrieval $\to$ Action Trigger:} Poisoned documents injected into enterprise documentation lie dormant until an executive user queries the agent. The retrieved text directs the agent to misroute confidential financial approvals (G2, G5)~\cite{zou2025poisonedrag, shafran2025machine}.
+    \item \textbf{P5: Multi-Agent Cascade (Swarm Epidemics):} A compromised agent transmits a crafted payload across an internal communication bus. Recipient agents interpret the payload as legitimate instructions, propagating the compromise exponentially across the agent collective~\cite{gu2024agent, dewitt2025open}.
+    \item \textbf{P6: Human-in-the-Loop Deceptive Justification:} When high-risk actions require human sign-off, an adversarial prompt forces the agent to synthesize a deceptive, highly plausible operational justification (e.g., ``Performing critical database maintenance to prevent outage'') while masking destructive or exfiltrative underlying parameters, exploiting confirmation fatigue.
+\end{itemize}

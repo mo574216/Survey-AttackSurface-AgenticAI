@@ -1,0 +1,27 @@
+# LaTeX temporary and intermediate build files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.blg
+*.bbl
+*.nav
+*.snm
+*.vrb
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# Preserve compiled manuscript PDFs
+!acm_main.pdf
+!main.pdf
+!figures/*.pdf
+!base_paper/*.pdf

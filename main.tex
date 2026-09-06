@@ -1,0 +1,71 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% Tighten float and bibliography spacing to fit the strict 16-page limit
+\setlength{\textfloatsep}{4pt plus 1pt minus 1pt}
+\setlength{\floatsep}{3pt plus 1pt minus 1pt}
+\setlength{\intextsep}{3pt plus 1pt minus 1pt}
+\setlength{\dbltextfloatsep}{4pt plus 1pt minus 1pt}
+\setlength{\dblfloatsep}{3pt plus 1pt minus 1pt}
+
+\def\IEEEbibitemsep{0pt plus 0.1pt}
+
+\begin{document}
+
+\title{The Expanding Attack Surface of Agentic AI: Vulnerabilities, Exploitation Vectors, Defenses, and Benchmarks}
+
+\author{
+    Seyedakbar~Mostafavi%
+    \thanks{S. Mostafavi is with the Department of Computer Engineering, Yazd University, Yazd 89195-741, Iran (e-mail: a.mostafavi@yazd.ac.ir).}
+}
+
+\markboth{IEEE Transactions on Dependable and Secure Computing,~Vol.~XX, No.~XX,~2026}%
+{Mostafavi: The Expanding Attack Surface of Agentic AI}
+
+\maketitle
+
+\input{sections/00_abstract.tex}
+
+\begin{IEEEkeywords}
+Agentic AI, Large Language Model (LLM) Security, Attack Surface, Tool Execution Security, Multi-Agent Systems (MAS), Model Context Protocol (MCP), Retrieval-Augmented Generation (RAG) Poisoning, Indirect Prompt Injection, Defense-in-Depth, Security Benchmarking.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\input{sections/01_introduction.tex}
+\input{sections/02_architecture.tex}
+\input{sections/03_threat_model.tex}
+\input{sections/04_attack_taxonomy.tex}
+\input{sections/05_modality_mcp.tex}
+\input{sections/06_multi_agent.tex}
+\input{sections/07_defenses.tex}
+\input{sections/08_benchmarks_metrics.tex}
+\input{sections/09_standards_governance.tex}
+\input{sections/10_open_challenges.tex}
+\input{sections/11_conclusion.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
