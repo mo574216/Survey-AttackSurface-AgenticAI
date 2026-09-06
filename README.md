@@ -1,8 +1,8 @@
-# The Expanding Attack Surface of Agentic AI: Vulnerabilities, Exploitation Vectors, Defenses, and Benchmarks
+# The Expanding Attack Surface of Agentic AI: Vulnerabilities, Threat Models, Defenses, and Benchmarks
 
 This repository contains the complete LaTeX source code, figures, tables, bibliography, and compiled PDF manuscripts for the survey paper:
 
-> **The Expanding Attack Surface of Agentic AI: Vulnerabilities, Exploitation Vectors, Defenses, and Benchmarks**  
+> **The Expanding Attack Surface of Agentic AI: Vulnerabilities, Threat Models, Defenses, and Benchmarks**  
 > **Author:** Seyedakbar Mostafavi  
 > **Affiliation:** Department of Computer Engineering, Yazd University, Yazd, Iran  
 > **Contact:** [a.mostafavi@yazd.ac.ir](mailto:a.mostafavi@yazd.ac.ir)
@@ -91,7 +91,7 @@ If you find this survey or repository useful in your research, please cite:
 
 ```bibtex
 @article{mostafavi2026expandingsurvey,
-  title={The Expanding Attack Surface of Agentic AI: Vulnerabilities, Exploitation Vectors, Defenses, and Benchmarks},
+  title={The Expanding Attack Surface of Agentic AI: Vulnerabilities, Threat Models, Defenses, and Benchmarks},
   author={Mostafavi, Seyedakbar},
   journal={ACM Computing Surveys / IEEE Transactions on Dependable and Secure Computing},
   year={2026}
