@@ -144,6 +144,6 @@
     node[pos=0.25, left=1pt, font=\tiny, text=red!80!black] {Escape / RCE};
 
 \end{tikzpicture}}
-\caption{End-to-end architectural taxonomy and Trusted Computing Base (TCB) delineation for agentic AI systems. Thick blue borders and shaded substrate denote verified TCB components ($\mathcal{P}, \mathcal{M}, \mathcal{S}, \mathcal{V}, \Omega$); red dashed containers designate untrusted ingress surfaces (AS1, AS2, AS3, AS5) and execution targets (AS4, AS6). Solid gray arrows trace authenticated capability and data flows, while dashed red arrows depict adversarial indirect injection and sandbox privilege escalation. Interposing the security broker $\Omega$ enforces capability-based access control (CBAC) and schema invariants prior to all environment side effects.}
+\caption{Agentic AI reference architecture and Trusted Computing Base (TCB) delineation. Blue boxes denote verified TCB modules ($\mathcal{P}, \mathcal{M}, \mathcal{S}, \Omega$), while dashed red containers highlight untrusted ingress and execution surfaces. Gray arrows trace capability flows mediated by security broker $\Omega$; dashed red vectors indicate prompt injection and sandbox escape paths.}
 \label{fig:reference_architecture}
 \end{figure}
